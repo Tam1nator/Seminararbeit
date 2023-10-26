@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Startseite</a>
+            <a href="{{ url_for('login') }}">Anmelden</a>
+        </nav>
+    </header>
+    
+</head>
+<script>
+    function toggleForms() {
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+
+        if (loginForm.style.display === 'none') {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            switchToRegister.style.display = 'block';
+            switchToLogin.style.display = 'none';
+        } else {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            switchToRegister.style.display = 'none';
+            switchToLogin.style.display = 'block';
+        }
+    }
+</script>
+<body>
+    <div class="container">
+        <form id="loginForm" action="/login" method="post">
+            <h2>Login</h2>
+            <input type="email" name="email" required placeholder="Email">
+            <input type="password" name="password" required placeholder="Password">
+            <button type="submit">Login</button>
+        </form>
+        
+        <form id="registerForm" action="/register" method="post" style="display: none;">
+            <h2>Register</h2>
+            <input type="email" name="email" required placeholder="Email">
+            <input type="password" name="password" required placeholder="Password">
+            <button type="submit">Register</button>
+        </form>
+
+        <p id="switchToRegister">Don't have an account? <button type="button" onclick="toggleForms()">Register here</button></p>
+        <p id="switchToLogin" style="display: none;">Already have an account? <button type="button" onclick="toggleForms()">Login here</button></p>
+    </div>
+</body>
+
+</html>

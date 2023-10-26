@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Modellvorhersage</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Startseite</a>
+            {% if current_user.is_authenticated %}
+                <span class="login">Angemeldet als: {{ current_user.email }}</span>
+                <form action="{{ url_for('logout') }}" method="post" class="logout-form">
+                    <input type="submit" value="Abmelden">
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Anmelden</a>
+            {% endif %}           
+        </nav>
+    </header>
+    <body>
+        <script>
+            var default_model = "{{ default_model }}";
+        </script>
+    </body>    
+    <script>
+        $(document).ready(function(){
+
+            $("#legendBtn").click(function(){
+                openLegendModal();
+            });
+            $("#model_name option[value='" + default_model + "']").prop('selected', true);
+            $("#model_name").change(function(){
+                var selectedModel = $(this).val();  // Holt den Namen des ausgewählten Modells
+
+                $.ajax({
+                    type: "POST",
+                    url: "/get_supported_columns",
+                    data: {model_name: selectedModel},
+                    success: function(data) {
+                        var supportedColumns = data.supported_columns;
+                        console.log(supportedColumns)
+
+                        $(".dynamic-input").remove();
+
+                        for(var i = 0; i < supportedColumns.length; i++) {
+                            var newInputField = $("<label class='dynamic-input'>" + supportedColumns[i] + ": <input type='number' name='" + supportedColumns[i] + "' step='any' required><br></label>");
+                            $("#dynamic-fields").append(newInputField);
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            var button = document.getElementById('toggleButton');
+
+            if (sidebar.style.right === "0px" || sidebar.style.right === "") {
+                sidebar.style.right = "-1100px";
+                button.style.right = '-70px';
+            } else {
+                sidebar.style.right = "0px";
+                button.style.right = '1030px';
+            }
+        }
+
+        function closeAlert(element) {
+            element.parentElement.style.display = 'none';
+        }
+
+        function copyToInputs(row) {
+            var cells = row.getElementsByTagName("td");
+            
+            // Abrufen des aktuell ausgewählten Modellnamens
+            var modelName = document.querySelector("#model_name").value;
+
+            var rowIndex = Array.from(row.parentNode.children).indexOf(row);
+            document.getElementById('selected_row_index').value = rowIndex;
+
+            // Alle vorherigen Highlights entfernen
+            var rows = document.querySelectorAll("#testData tbody tr");
+            rows.forEach(function(r) {
+                r.classList.remove("highlighted-row");
+            });
+
+            // Angeklickte Zeile highlighten
+            row.classList.add("highlighted-row");
+            
+            // Legende für die Spalten
+            var column_legend = {
+                'J': 'Jahreszeit',
+                'D': 'Dauer',
+                'A': 'avgtemp_c',
+                'M': 'maxwind_kph',
+                'T': 'totalprecip_mm',
+                'H': 'avghumidity',
+                'W': 'Waldfläche in Hektar'
+            };
+            
+            var cell_index_legend = {
+                'J': 0,  
+                'D': 1,
+                'A': 2,
+                'M': 3,
+                'T': 4,
+                'H': 5,
+                'W': 6  
+            };
+    
+            // Extrahiere die unterstützten Spalten aus dem Modellnamen
+            var supported_columns_short = modelName.split('-')[1];  // Beispiel: 'JDAMTHW'
+            var supported_columns = supported_columns_short.split('').map(function(letter) {
+                return column_legend[letter];
+            });
+            
+            // Kopiere die Werte aus den Zellen in die entsprechenden Eingabefelder
+            for(var i = 0; i < supported_columns.length; i++) {
+                var inputFieldName = supported_columns[i];  // Beispiel: 'Jahreszeit'
+                var inputField = document.querySelector("input[name='" + inputFieldName + "']");
+                
+                // Holen Sie sich den Index der Zelle basierend auf dem Buchstaben im Modellnamen
+                var cellIndex = cell_index_legend[supported_columns_short[i]];
+                
+                if (inputField !== null) {
+                    inputField.value = cells[cellIndex].innerText;
+                }
+            }
+            var true_prediction = document.getElementById('true_prediction');
+            true_prediction.value = cells[7].innerText;
+        }
+
+        function checkInputsAndSubmit() {
+            var inputs = document.querySelectorAll("input[type='number']");
+            for (var i = 0; i < inputs.length; i++) {
+                if (!inputs[i].value) {
+                    alert("Bitte füllen Sie alle Eingabefelder aus.");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function openModal() {
+            document.getElementById('trainModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('trainModal').style.display = 'none';
+        }
+
+        function openLegendModal() {
+        document.getElementById('legendModal').style.display = 'block';
+        }
+
+        function closeLegendModal() {
+            document.getElementById('legendModal').style.display = 'none';
+        }
+
+
+    </script>
+</head>
+<body>
+    
+    <h2>Wählen Sie ein Modell und geben Sie die Parameter ein</h2>
+    <div class="container">
+        <div class="form-container">
+            <!-- Modal zum Trainieren des Modells -->
+            <div id="trainModal" class="modal">
+                <div class="modal-content">
+                    <h3>Modell trainieren</h3>
+                    <form action="/train_model" method="post" id="trainModelForm">
+                        
+                        <label for="model_name">Wählen Sie ein Modell:</label>
+                        <select name="model_name">
+                            <option value="linear_regression">Lineare Regression</option>
+                            <option value="decision_tree">Entscheidungsbaum</option>
+                            <option value="random_forest">Random Forest</option>
+                            <option value="xgboost">XGBoost</option>
+                            <option value="neural_network">Neuronales Netzwerk</option>
+                            <option value="svr">Support Vector Regression (SVR)</option>
+                        </select>                     
+                        <br><br>
+                        
+                        <label><input type="checkbox" name="columns" value="Jahreszeit"> Jahreszeit</label><br>
+                        <label><input type="checkbox" name="columns" value="Dauer" checked disabled> Dauer</label><br>
+                        <label><input type="checkbox" name="columns" value="avgtemp_c" checked disabled> Durchschnittliche Temperatur</label><br>
+                        <label><input type="checkbox" name="columns" value="maxwind_kph"> Max Windgeschwindigkeit</label><br>
+                        <label><input type="checkbox" name="columns" value="totalprecip_mm"> Durchschnittlicher Niederschlag</label><br>
+                        <label><input type="checkbox" name="columns" value="avghumidity"> Durchschnittliche Luftfeuchtigkeit</label><br>
+                        <label><input type="checkbox" name="columns" value="Waldfläche in Hektar" checked disabled> Waldfläche</label><br>
+                        
+                        <input type="submit" value="Trainieren">
+                        <button type="button" onclick="closeModal()">Abbrechen</button>
+                    </form>
+                </div>
+            </div>
+            <!-- Hauptformular zum Vorhersagen -->
+            <div id="main-content">
+                <form action="/" method="post" id="predictionForm">
+                    <div class="legend">
+                        <label for="model_name">Wählen Sie ein Modell:</label>
+                        <select name="model_name" id="model_name">
+                            {% for model_name, _ in available_models.items() %}
+                            <option value="{{ model_name }}" data-columns="{{ ','.join(supported_columns[model_name]) }}"{% if model_name == default_model_name %}selected{% endif %}>{{ model_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- Button, um die Legende anzuzeigen -->
+                        <button type="button" id="legendBtn">Legende</button>
+                        <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}> Intervall anzeigen
+                    </div>
+
+                    
+ 
+                    <!-- Modal für die Legende -->
+                    <div id="legendModal" class="modal">
+                        <div class="modal-content">
+                            <h3>Legende</h3>
+                            <ul>
+                                <li>J: Jahreszeit</li>
+                                <li>D: Dauer</li>
+                                <li>A: avgtemp_c</li>
+                                <li>M: maxwind_kph</li>
+                                <li>T: totalprecip_mm</li>
+                                <li>H: avghumidity</li>
+                                <li>W: Waldfläche in Hektar</li>
+                            </ul>
+                            <button type="button" onclick="closeLegendModal()">Schließen</button>
+                        </div>
+                    </div>
+                                        
+                    <br><br>
+
+                    <div id="dynamic-fields"></div>
+
+                    {% for column in supported_columns %}
+                    <label class="dynamic-input">{{ column }}: <input type="number" name="{{ column }}" step="any" required><br></label>
+                    {% endfor %}
+                    <input type="hidden" name="selected_row_index" id="selected_row_index">
+
+                    <input type="hidden" name="true_prediction" id="true_prediction">
+                
+                    <input type="submit" value="Vorhersage machen"><br>
+
+                    <!-- Button zum Öffnen des Modals zum Trainieren des Modells -->
+                    <button type="button" onclick="openModal()">Modell trainieren</button><br>
+
+                    {% if prediction %}
+                    <h3>Vorhersage: {{ prediction }}</h3>
+                    {% endif %}
+                    {% if true_prediction %}
+                    <h3>Tatsächlicher Wert: {{ true_prediction }}</h3>
+                    {% endif %}
+                    {% if mse %}
+                    <h3>MSE: {{ mse }}</h3>
+                    {% endif %}
+                    {% if dropout_prediction %}
+                    <h3>Dropout Vorhersage: {{ dropout_prediction }}</h3>
+                    {% endif %}
+                    {% if interval[0] != None and interval[1] != None %}
+                    <h4>Intervall: {{ interval[0] }} - {{ interval[1] }}</h4>
+                    {% endif %}
+                </form>
+
+                
+            </div>
+        </div>
+        
+        <div id="sidebar">
+            <button id="toggleButton" onclick="toggleSidebar()">Testdaten anzeigen</button>
+            <div class="table-container">
+                <table id="testData">
+                    <thead>
+                        <tr>
+                            <th>Jahreszeit</th>
+                            <th>Dauer in Tage</th>
+                            <th>Durchschnittliche Temperatur in C</th>
+                            <th>Max Windgeschwindigkeit in km/h</th>
+                            <th>Durchschnittlicher Niederschlag in mm</th>
+                            <th>Durchschnittliche Luftfeuchtigkeit in %</th>
+                            <th>Waldfläche in Hektar</th>
+                            <th>Anzahl der Waldbrände</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if test_data %}
+                            {% for index, row in test_data %}
+                            <tr onclick="copyToInputs(this)">
+                                <input type="hidden" name="selected_row_index" value="{{ index }}">
+                                {% for item in row[1] %}
+                                <td data-column="{{ test_data_columns[index] }}">{{ item }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8">Keine Testdaten verfügbar</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>                
+                </table>
+            </div>
+        </div>
+        <div class="message-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                        <span class="close-btn" onclick="closeAlert(this)">&times;</span>
+                    </div>                
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>             
+    </div>
+</body>
+</html>
