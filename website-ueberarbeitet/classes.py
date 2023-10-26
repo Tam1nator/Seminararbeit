@@ -11,6 +11,8 @@ class User(db.Model, UserMixin):
     models = db.relationship('MLModel', back_populates='user')
     scalers = db.relationship('Scaler', back_populates='user')
     nn_dropout_models = db.relationship('NNDropoutModel', back_populates='user')
+    checkbox_value = db.Column(db.Boolean, default=True)
+    default_model = db.Column(db.String(255), nullable=True, default='linear_regression-JDAMTHW')
 
 class MLModel(db.Model):
     __tablename__ = 'ml_models'
@@ -33,5 +35,5 @@ class NNDropoutModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     model_name = db.Column(db.String(255), nullable=False)
-    model_data = db.Column(db.LargeBinary, nullable=False)
+    model_path = db.Column(db.String(255), nullable=False)
     user = db.relationship('User', back_populates='nn_dropout_models')

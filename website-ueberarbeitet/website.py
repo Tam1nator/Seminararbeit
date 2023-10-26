@@ -186,69 +186,69 @@ def load_scaler_from_db(user_id):
     model_scalers.update(loaded_scalers)
     return loaded_scalers
 
+trained_models_dir = "website-ueberarbeitet\\trainierte_modelle\\"
+
 def save_nn_dropout_model_to_db(user_id, model_name, nn_dropout_model):
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        temp_saved_model_path = f"{tmpdirname}/saved_model"
-        tf.keras.models.save_model(nn_dropout_model, temp_saved_model_path, save_format='tf')
+    if not os.path.exists(trained_models_dir):
+        os.makedirs(trained_models_dir)
 
-        # Lesen Sie das gesamte Verzeichnis und packen Sie es in einen BytesIO-Stream
-        model_stream = io.BytesIO()
-        with zipfile.ZipFile(model_stream, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            for root, _, files in os.walk(temp_saved_model_path):
-                for file in files:
-                    file_path = os.path.join(root, file)
-                    arcname = os.path.relpath(file_path, temp_saved_model_path)
-                    zipf.write(file_path, arcname)
-
-        nn_dropout_model_data = model_stream.getvalue()
+    model_path = os.path.join(trained_models_dir, f"{model_name}.pkl")
+    nn_dropout_model.save(model_path)
     
-    new_nn_dropout_model = NNDropoutModel(user_id=user_id, model_name=model_name, model_data=nn_dropout_model_data)
+    new_nn_dropout_model = NNDropoutModel(user_id=user_id, model_name=model_name, model_path=model_path)
     db.session.add(new_nn_dropout_model)
     db.session.commit()
 
 
 def load_nn_dropout_model(user_id):
     global neural_network_dropout
-    nn_dropout_models = NNDropoutModel.query.filter_by(user_id=user_id).all()
+    nn_dropout_models = db.session.query(NNDropoutModel).filter_by(user_id=user_id).all()
     loaded_nn_dropout_models = {}
     
     for model in nn_dropout_models:
-        model_stream = io.BytesIO(model.model_data)
-        with tempfile.TemporaryDirectory() as tmpdirname:
-            with zipfile.ZipFile(model_stream, 'r') as zipf:
-                zipf.extractall(tmpdirname)
-                loaded_model = tf.keras.models.load_model(tmpdirname, custom_objects={'MonteCarloDropout': MonteCarloDropout})
-            
-            loaded_nn_dropout_models[model.model_name] = loaded_model
+        loaded_model = tf.keras.models.load_model(model.model_path, custom_objects={'MonteCarloDropout': MonteCarloDropout})
+        loaded_nn_dropout_models[model.model_name] = loaded_model
     
     neural_network_dropout.update(loaded_nn_dropout_models)
     return loaded_nn_dropout_models
 
-
+@app.route('/set_defaults', methods=['POST'])
+@login_required
+def set_defaults():
+    interval = 'my_checkbox' in request.form  # Überprüft, ob die Checkbox angekreuzt ist
+    default_model = default_model_name
+    
+    current_user.checkbox_value = interval
+    current_user.default_model = default_model
+    
+    db.session.commit()
+    
+    return redirect(url_for('index'))
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index(): 
+    global default_model_name
+    checkbox_default_value = True
     user_id = get_user_id()
     if current_user.is_authenticated:
         load_model_from_db(user_id)
         load_scaler_from_db(user_id)
         load_nn_dropout_model(user_id)
-        print(f"Angemeldet als {current_user.email}")
+        default_model_name = current_user.default_model
+        checkbox_default_value = current_user.checkbox_value
     else:
         print("Nicht angemeldet")
     # Testdaten einmalig laden
     test_data = pd.read_csv('website-ueberarbeitet\data\combined_test_data.csv')
     prediction = None
     interval = None  # Neuer Wert für das Vorhersageintervall
-    global default_model_name
     model_name = request.form.get('model_name') if request.method == 'POST' else default_model_name
     default_model_name = model_name
     interval = (None, None) 
     mse = None
     true_prediction = None
     dropout_prediction = None
-    checkbox_default_value = True
 
     if model_name in available_models:
         model = available_models.get(model_name)
@@ -264,6 +264,8 @@ def index():
         data = {}
 
         checkbox_default_value = 'my_checkbox' in request.form
+        if user_id:
+            set_defaults()
 
         for column in supported_columns:
             value = request.form.get(column)
@@ -576,6 +578,10 @@ def train_model():
     models[model_name] = model
 
     user_id = get_user_id()
+    if user_id:
+        user = User.query.get(user_id)
+        user.default_model = model_display_name
+        db.session.commit()
 
     if model_name == "neural_network":
         neural_network_dropout[model_display_name] = neural_network_dropout_model
