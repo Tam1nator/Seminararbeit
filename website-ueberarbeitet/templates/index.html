@@ -245,7 +245,12 @@
                     <input type="submit" value="Vorhersage machen"><br>
 
                     <!-- Button zum Öffnen des Modals zum Trainieren des Modells -->
-                    <button type="button" onclick="openModal()">Modell trainieren</button><br>
+                    {% if current_user.is_authenticated %}
+                        <button type="button" onclick="openModal()">Modell trainieren</button><br>
+                    {%else %}
+                        <button type="button" onclick="openModal()" disabled>Modell trainieren</button>
+                        <span>Anmelden für Modelltraining</span>
+                    {% endif %}
 
                     {% if prediction %}
                     <h3>Vorhersage: {{ prediction }}</h3>
