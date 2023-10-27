@@ -37,13 +37,22 @@
                     url: "/get_supported_columns",
                     data: {model_name: selectedModel},
                     success: function(data) {
+                        const correct_name = {
+                            'Jahreszeit': 'Jahreszeit',
+                            'Dauer': 'Dauer in Tage',
+                            'avgtemp_c': 'Durchschnittliche Temperatur in C',
+                            'maxwind_kph': 'Max Windgeschwindigkeit in km/h',
+                            'totalprecip_mm': 'Durchschnittlicher Niederschlag in mm',
+                            'avghumidity': 'Durchschnittliche Luftfeuchtigkeit in %',
+                            'Waldfläche in Hektar': 'Waldfläche in Hektar'
+                        };
                         var supportedColumns = data.supported_columns;
                         console.log(supportedColumns)
 
                         $(".dynamic-input").remove();
 
                         for(var i = 0; i < supportedColumns.length; i++) {
-                            var newInputField = $("<label class='dynamic-input'>" + supportedColumns[i] + ": <input type='number' name='" + supportedColumns[i] + "' step='any' required><br></label>");
+                            var newInputField = $("<label class='dynamic-input'>" + correct_name[supportedColumns[i]] + ": <input type='number' name='" + supportedColumns[i] + "' step='any' required><br></label>");
                             $("#dynamic-fields").append(newInputField);
                         }
                     },
@@ -162,15 +171,13 @@
 
     </script>
 </head>
-<body>
-    
-    <h2>Wählen Sie ein Modell und geben Sie die Parameter ein</h2>
+<body class="hintergrundbild">  
     <div class="container">
         <div class="form-container">
             <!-- Modal zum Trainieren des Modells -->
             <div id="trainModal" class="modal">
                 <div class="modal-content">
-                    <h3>Modell trainieren</h3>
+                    <h2>Modell trainieren</h2>
                     <form action="/train_model" method="post" id="trainModelForm">
                         
                         <label for="model_name">Wählen Sie ein Modell:</label>
@@ -199,6 +206,7 @@
             </div>
             <!-- Hauptformular zum Vorhersagen -->
             <div id="main-content">
+                <h2>Wählen Sie ein Modell und geben Sie die Parameter ein</h2>
                 <form action="/" method="post" id="predictionForm">
                     <div class="legend">
                         <label for="model_name">Wählen Sie ein Modell:</label>
@@ -209,7 +217,7 @@
                         </select>
                         <!-- Button, um die Legende anzuzeigen -->
                         <button type="button" id="legendBtn">Legende</button>
-                        <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}> Intervall anzeigen
+                        <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}> <span>Intervall anzeigen</span>
                     </div>
 
                     
@@ -235,8 +243,18 @@
 
                     <div id="dynamic-fields"></div>
 
+                    {% set correct_name = {
+                        'Jahreszeit': 'Jahreszeit',
+                        'Dauer': 'Dauer in Tage',
+                        'avgtemp_c': 'Durchschnittliche Temperatur in C',
+                        'maxwind_kph': 'Max Windgeschwindigkeit in km/h',
+                        'totalprecip_mm': 'Durchschnittlicher Niederschlag in mm',
+                        'avghumidity': 'Durchschnittliche Luftfeuchtigkeit in %',
+                        'Waldfläche in Hektar': 'Waldfläche in Hektar'
+                    } %}
+
                     {% for column in supported_columns %}
-                    <label class="dynamic-input">{{ column }}: <input type="number" name="{{ column }}" step="any" required><br></label>
+                    <label class="dynamic-input">{{ correct_name[column] }}: <input type="number" name="{{ column }}" step="any" required><br></label>
                     {% endfor %}
                     <input type="hidden" name="selected_row_index" id="selected_row_index">
 
@@ -246,9 +264,9 @@
 
                     <!-- Button zum Öffnen des Modals zum Trainieren des Modells -->
                     {% if current_user.is_authenticated %}
-                        <button type="button" onclick="openModal()">Modell trainieren</button><br>
+                        <button type="button" name="train_model" onclick="openModal()">Modell trainieren</button><br>
                     {%else %}
-                        <button type="button" onclick="openModal()" disabled>Modell trainieren</button>
+                        <button type="button" name="train_model" onclick="openModal()" disabled>Modell trainieren</button>
                         <span>Anmelden für Modelltraining</span>
                     {% endif %}
 
@@ -265,7 +283,7 @@
                     <h3>Dropout Vorhersage: {{ dropout_prediction }}</h3>
                     {% endif %}
                     {% if interval[0] != None and interval[1] != None %}
-                    <h4>Intervall: {{ interval[0] }} - {{ interval[1] }}</h4>
+                    <h3>Intervall: {{ interval[0] }} - {{ interval[1] }}</h3>
                     {% endif %}
                 </form>
 
@@ -274,7 +292,7 @@
         </div>
         
         <div id="sidebar">
-            <button id="toggleButton" onclick="toggleSidebar()">Testdaten anzeigen</button>
+            <button id="toggleButton" onclick="toggleSidebar()">Testdaten<br>anzeigen</button>
             <div class="table-container">
                 <table id="testData">
                     <thead>

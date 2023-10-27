@@ -1,10 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .container {
     display: flex;
 }
 .form-container, .table-container {
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
+    border: 10px solid rgba(60, 73, 65, 0.7);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 table {
@@ -12,7 +15,7 @@ table {
     border-collapse: collapse;
 }
 table, th, td {
-    border: 1px solid #ccc;
+    border: 1px solid rgba(60, 73, 65, 0.5);
 }
 th, td {
     padding: 8px;
@@ -20,6 +23,7 @@ th, td {
 }
 /* Modal-Stil */
 .modal {
+    z-index: 1000;
     display: none;
     position: fixed;
     top: 0;
@@ -34,7 +38,7 @@ th, td {
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px;
-    background-color: #fff;
+    background-color: rgba(60, 73, 65, 0.8);
     width: 80%;
     max-width: 500px;
 }
@@ -55,7 +59,7 @@ th, td {
     border-color: #ebccd1;
     color: #a94442;
 }
-.legend label, .legend select, .legend #legendBtn {
+.legend label, .legend select, .legend #legendBtn, .legend input[type='checkbox'], .legend span{
     display: inline-block;
     vertical-align: middle;  
     margin-bottom: -50px;
@@ -79,7 +83,7 @@ th, td {
     text-shadow: 0 1px 0 #ffffff;
 }
 .highlighted-row {
-    background-color: #f5f5f5;  /* Graue Hintergrundfarbe für den Highlight-Effekt */
+    background-color: rgba(60, 73, 65, 0.5);  /* Graue Hintergrundfarbe für den Highlight-Effekt */
 }
 #sidebar {
     position: fixed;
@@ -87,14 +91,25 @@ th, td {
     right: -1100px; /* Die Breite der Seitenleiste als negativer Wert, damit sie außerhalb des Bildschirms startet */
     width: 1100px;
     height: 100%;
-    background-color: rgba(204, 204, 204, 0.5);  /* 50% transparentes Grau */
-    color: #000000;
+    background-color: rgba(60, 73, 65, 0.7);  /* 50% transparentes Grau */
+    color: #ffffff;
     overflow-y: scroll;
     transition: right 0.4s; /* Animationsdauer */
 }
 
 #main-content {
     transition: margin-right 0.3s; /* Animationsdauer */
+    color: #ffffff;
+    background-color: rgba(60, 73, 65, 0.7);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Optional, um die Größe zu bearbeiten: */
+    width: 50%;   /* oder eine feste Breite wie 400px */
+    height: 65%;  /* oder eine feste Höhe wie 300px */
+    
 }
 
 #toggleButton {
@@ -105,13 +120,14 @@ th, td {
 
     width: 120px;
     height: 60px;
-    background-color: #ccc;
+    background-color: rgba(60, 73, 65, 0.7);
     border: none;
     cursor: pointer;
 
     transform: rotate(270deg) translateY(-50%);
     /* Um die Trapezform zu erstellen */
     clip-path: polygon(0% 100%, 17.5% 0%, 82.5% 0%, 100% 100%);
+    color: #ffffff;
 
     transition: right 0.4s; /* Animationsdauer */
 }
@@ -125,7 +141,7 @@ th, td {
 }
 
 header {
-    background-color: #333;
+    background-color: rgba(60, 73, 65, 0.5);
     padding: 10px 0;
     text-align: center;
 }
@@ -168,4 +184,136 @@ nav a:hover {
 
 .logout-form input[type="submit"]:hover {
     background-color: #c00;
+}
+
+.hintergrundbild {
+    background-image: url("1.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 10vh;
+  }
+
+#main-content h3 {
+    padding-top: 15px;
+    padding-left: 15px;
+    font-size: 20px; /* Vergrößert den Text von h3 Elementen */
+    margin-bottom: 8px; /* Optional: Fügt etwas Abstand unter den h3 Elementen hinzu */
+    margin-left: 20px;
+}
+#main-content h2 {
+    padding-top: 15px;
+    padding-left: 15px;
+    font-size: 1.5em; /* Vergrößert den Text von h3 Elementen */
+    margin-left: 20px;
+   }
+
+/* Reduziere die Höhe der Inputfelder */
+#main-content input[type="number"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+}
+
+#main-content input[name="Jahreszeit"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 250px;
+}
+
+#main-content input[name="Dauer"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 218px;
+}
+
+#main-content input[name="avgtemp_c"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 59px;
+}
+
+#main-content input[name="maxwind_kph"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 54px;
+}
+
+#main-content input[name="totalprecip_mm"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 22px;
+}
+
+#main-content input[name="avghumidity"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 19px;
+}
+
+#main-content input[name="Waldfläche in Hektar"] {
+    height: 25px; /* oder den gewünschten Wert */
+    padding-left: 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    margin-left: 162px;
+}
+
+#main-content select {
+    height: 25px; /* oder den gewünschten Wert */;
+    padding: 0 5px;
+    font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    width: auto;
+}
+
+/* Reduziere die Höhe der Buttons */
+#main-content button[name="train_model"] {
+    height: 30px;
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+    margin-left: 35px;
+}
+
+#main-content button {
+    height: 30px;
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+}
+
+#main-content label {
+    font-size: 1.2em;
+    padding-top: 15px;
+    padding-left: 15px;
+    margin-right: 10px; /* Abstand nach den Labels */
+    margin-left: 20px;
+}
+
+#main-content input[type="submit"] {
+    height: 30px;
+    font-size: 14px;
+    padding: 5px 15px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+    margin-left: 35px;
+}
+
+#main-content input[type="checkbox"] {
+    transform: scale(1.5); /* Vergrößert das Kontrollkästchen */
+    margin-left: 30px; /* Optional: Fügt etwas Abstand rechts vom Kontrollkästchen hinzu */
 }
