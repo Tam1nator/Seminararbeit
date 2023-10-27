@@ -177,7 +177,7 @@
             <!-- Modal zum Trainieren des Modells -->
             <div id="trainModal" class="modal">
                 <div class="modal-content">
-                    <h2>Modell trainieren</h2>
+                    <h3>Modell trainieren</h3>
                     <form action="/train_model" method="post" id="trainModelForm">
                         
                         <label for="model_name">Wählen Sie ein Modell:</label>
@@ -223,16 +223,16 @@
                     
  
                     <!-- Modal für die Legende -->
-                    <div id="legendModal" class="modal">
-                        <div class="modal-content">
-                            <h3>Legende</h3>
+                    <div id="legendModal" class="modal-legend">
+                        <div class="modal-content-legend">
+                            <h2>Legende</h2>
                             <ul>
                                 <li>J: Jahreszeit</li>
-                                <li>D: Dauer</li>
-                                <li>A: avgtemp_c</li>
-                                <li>M: maxwind_kph</li>
-                                <li>T: totalprecip_mm</li>
-                                <li>H: avghumidity</li>
+                                <li>D: Dauer in Tage</li>
+                                <li>A: Durchschnittliche Temperatur in C</li>
+                                <li>M: Max Windgeschwindigkeit in km/h</li>
+                                <li>T: Durchschnittlicher Niederschlag in mm</li>
+                                <li>H: Durchschnittliche Luftfeuchtigkeit in %</li>
                                 <li>W: Waldfläche in Hektar</li>
                             </ul>
                             <button type="button" onclick="closeLegendModal()">Schließen</button>
@@ -268,8 +268,7 @@
                     {%else %}
                         <button type="button" name="train_model" onclick="openModal()" disabled>Modell trainieren</button>
                         <span>Anmelden für Modelltraining</span>
-                    {% endif %}
-
+                    {% endif %}                
                     {% if prediction %}
                     <h3>Vorhersage: {{ prediction }}</h3>
                     {% endif %}
