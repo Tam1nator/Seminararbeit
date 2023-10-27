@@ -143,7 +143,9 @@ th, td {
 header {
     background-color: rgba(60, 73, 65, 0.5);
     padding: 10px 0;
+    padding-top: 20px;
     text-align: center;
+    height: 30px;
 }
 
 nav a {
@@ -155,6 +157,24 @@ nav a {
 
 nav a:hover {
     text-decoration: underline;
+}
+
+.impressum {
+    background-color: rgba(60, 73, 65, 0.5);
+    padding: 10px 0;
+    padding-top: 20px;
+    text-align: center;
+    height: 30px;
+    position: absolute;   /* This positions the element based on the nearest positioned ancestor */
+    bottom: 0;            /* This places it at the bottom of the positioned ancestor */
+    width: 100%;          /* This makes it span the full width of the page */
+}
+
+.impressum span {
+    color: #fff;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .login {
