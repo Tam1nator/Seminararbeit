@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <header>
         <nav>
-            <a href="{{ url_for('index') }}">Startseite</a>
             {% if current_user.is_authenticated %}
                 <span class="login">Angemeldet als: {{ current_user.email }}</span>
                 <form action="{{ url_for('logout') }}" method="post" class="logout-form">
