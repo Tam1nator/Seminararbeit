@@ -237,8 +237,6 @@ def index():
         load_nn_dropout_model(user_id)
         default_model_name = current_user.default_model
         checkbox_default_value = current_user.checkbox_value
-    else:
-        print("Nicht angemeldet")
     # Testdaten einmalig laden
     test_data = pd.read_csv('website-ueberarbeitet\data\combined_test_data.csv')
     prediction = None

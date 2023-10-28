@@ -34,13 +34,14 @@
         }
     }
 </script>
-<body>
+<body class="hintergrundbild">
     <div class="container">
         <form id="loginForm" action="/login" method="post">
             <h2>Login</h2>
             <input type="email" name="email" required placeholder="Email">
             <input type="password" name="password" required placeholder="Password">
             <button type="submit">Login</button>
+            <p id="switchToRegister"><button type="button" onclick="toggleForms()">Register here</button></p>
         </form>
         
         <form id="registerForm" action="/register" method="post" style="display: none;">
@@ -48,10 +49,9 @@
             <input type="email" name="email" required placeholder="Email">
             <input type="password" name="password" required placeholder="Password">
             <button type="submit">Register</button>
-        </form>
-
-        <p id="switchToRegister">Don't have an account? <button type="button" onclick="toggleForms()">Register here</button></p>
-        <p id="switchToLogin" style="display: none;">Already have an account? <button type="button" onclick="toggleForms()">Login here</button></p>
+            <p id="switchToLogin" style="display: none;"><button type="button" onclick="toggleForms()">Login here</button></p>
+        </form>   
+        
     </div>
 </body>
 
