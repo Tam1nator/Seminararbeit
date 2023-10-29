@@ -34,8 +34,9 @@ import zipfile
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Papa123!@localhost/datenbank'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Papa123!@localhost:3307/datenbank'
 db.init_app(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -54,7 +55,7 @@ def login():
             login_user(user)
             return redirect(url_for('index'))
         else:
-            return "Falsche Anmeldedaten", 401
+            flash('Falsche Anmeldedaten', 'login_error')
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -538,7 +539,7 @@ def train_model():
 
     # Überprüfen, ob das Modell bereits trainiert wurde
     if model_display_name in available_models:
-        flash('Das Modell wurde bereits mit denselben Parametern trainiert.', 'error')
+        flash('Das Modell wurde bereits mit denselben Parametern trainiert.', 'train-model-error')
         return redirect('/')
     
     if model_name == "linear_regression":

@@ -33,6 +33,9 @@
             switchToLogin.style.display = 'block';
         }
     }
+    function closeAlert(element) {
+            element.parentElement.style.display = 'none';
+        }
 </script>
 <body class="hintergrundbild">
     <div class="container">
@@ -50,7 +53,22 @@
             <input type="password" name="password" required placeholder="Password">
             <button type="submit">Register</button>
             <p id="switchToLogin" style="display: none;"><button type="button" onclick="toggleForms()">Login here</button></p>
-        </form>   
+        </form>
+        
+        <div class="message-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'login_error' %}
+                            <div class="alert alert-error">
+                                {{ message }}
+                                <span class="close-btn" onclick="closeAlert(this)">&times;</span>
+                            </div>                
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>        
         
     </div>
 </body>
