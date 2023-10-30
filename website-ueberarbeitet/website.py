@@ -67,7 +67,8 @@ def register():
         # Überprüfen, ob der Benutzer bereits existiert
         user = User.query.filter_by(email=email).first()
         if user:
-            return "Ein Benutzer mit dieser E-Mail-Adresse existiert bereits", 400
+            flash("Ein Benutzer mit dieser E-Mail-Adresse existiert bereits", 'register_error')
+            return redirect(url_for('login'))
 
         # Neuen Benutzer erstellen und zur Datenbank hinzufügen
         new_user = User(email=email, password=generate_password_hash(password, method='sha256'))
@@ -84,7 +85,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    global model_scalers, available_models, neural_network_dropout
+    global model_scalers, available_models, neural_network_dropout, default_model_name
     model_scalers = {
     'linear_regression-JDAMTHW': scaler,
     'decision_tree-JDAMTHW': scaler,
@@ -102,6 +103,7 @@ def logout():
     "xgboost-JDAMTHW" : xgb_model
     }
     neural_network_dropout = {}
+    default_model_name = 'linear_regression-JDAMTHW'
     return redirect(url_for('index'))
 
 # Dictionary zum Speichern der trainierten Modelle
