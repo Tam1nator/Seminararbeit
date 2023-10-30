@@ -81,6 +81,10 @@ def register():
 
     return render_template('login.html')
 
+@app.route('/docs')
+def docs():
+    return render_template('docs.html')
+
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():

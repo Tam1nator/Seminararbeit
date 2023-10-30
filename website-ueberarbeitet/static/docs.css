@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: rgba(60, 73, 65, 0.5);
+    padding: 10px 0;
+    padding-top: 20px;
+    text-align: center;
+    height: 30px;
+}
+
+nav a {
+    color: #fff;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.hintergrundbild {
+    background-image: url("1.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 10vh;
+}
+
+.container {
+    margin-top: 2422px;
+    transition: margin-right 0.3s; /* Animationsdauer */
+    color: #ffffff;
+    background-color: rgba(60, 73, 65, 0.7);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Optional, um die Größe zu bearbeiten: */
+    width: 50%;   /* oder eine feste Breite wie 400px */
+    height: 600%;  /* oder eine feste Höhe wie 300px */
+    
+}
+
+.container label::before {
+    content: "";
+    display: block;
+    height: 0;
+    width: 20px; 
+}
+
+.container label {
+    display: block;
+    font-size: 1.2em;
+    padding-top: 15px;
+    padding-left: 15px;
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.container li::before {
+    content: "";
+    display: block;
+    height: 0;
+    width: 20px; 
+}
+
+.container li {
+    display: block;
+    font-size: 1.2em;
+    padding-top: 15px;
+    padding-left: 15px;
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.container h2 {
+    font-size: 1.2em;
+    padding-top: 15px;
+    padding-left: 15px;
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.bild-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.mein-bild {
+    width: 99%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border: 5px solid black;
+}
+

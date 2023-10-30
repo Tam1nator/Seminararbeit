@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='docs.css') }}">
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Startseite</a>
+        </nav>
+    </header>
+    
+</head>
+
+<body class="hintergrundbild">
+    <div class="container">
+        <h2>Projektbeschreibung</h2>
+        <label>Im Zuge meiner Seminararbeit habe ich ein Projekt gestartet, bei dem es darum geht, mit Hilfe von Machine Learning-Modellen aktuelle Probleme 
+            des 21. Jahrhunderts anzugehen. Für meinen Eingenanteil entschied ich mich Modelle zu trainieren welche die Anzahl an Waldbränden vorhersagen können. 
+            Dafür habe ich 2500 Trainingsdatensätze basierend auf deutschen Waldbrandstatistiken aus den letzten 12 
+            Jahren zusammengestellt. 
+        </label>
+        <h2>Anleitung</h2>
+        <h2>Modellauswahl</h2>
+        <label>Bitte wählen Sie im Dropdown-Menü, das rot markiert ist, eines der verfügbaren Modelle aus, um die Anzahl der Waldbrände vorherzusagen. 
+            Insgesamt stehen Ihnen sechs unterschiedlich vortrainierte Modelle zur Verfügung, die sich sowohl in ihrer Arbeitsweise als auch in 
+            ihrer Vorhersagegenauigkeit voneinander unterscheiden. Sie haben ebenfalls die Möglichkeit, personalisierte Modelle zu trainieren. 
+            Weitere Details zum Prozess des Modelltrainings finden Sie im entsprechenden Abschnitt „Modelltraining“.</label>
+        <br>
+        <div class="bild-container">
+            <img src="/static/modelauswahl.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+        <h2>Legende</h2>
+        <label>Die sechs vortrainierten Modelle sind durch eine spezifische Buchstabenkombination, das sogenannte Suffix, gekennzeichnet.
+             Diese Kombination dient als Hinweis auf die beim Modelltraining verwendeten Eingabeparameter. 
+             Durch Klicken auf den rot markierten Button "Legende" öffnet sich ein Popup, welches Ihnen die Zuordnung der Buchstaben zu den jeweiligen 
+             Eingabeparametern zeigt.
+        </label>
+        <br>
+        <div class="bild-container">
+            <img src="/static/Legende.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+        <div class="bild-container">
+            <img src="/static/legende-popup.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+        <h2>Testdaten</h2>
+        <label>Ich stelle Ihnen 100 Testdatensätze zur Verfügung, die auch Informationen zur Jahreszeit enthalten. Die Jahreszeiten sind dabei wie folgt kodiert:
+        </label>
+        <ul>
+            <li>- Frühling (März bis Juni): 1</li>
+            <li>- Sommer (Juni bis September): 2</li>
+            <li>- Herbst (September bis Dezember): 3</li>
+            <li>- Winter (Dezember bis März): 4</li>
+        </ul>
+        <label>
+            Um auf die Testdaten zuzugreifen, 
+            klicken Sie bitte auf den rot markierten Button auf der rechten Seite. 
+            Wählen Sie einen Datensatz aus, indem Sie auf die entsprechende Zeile klicken. 
+            Die ausgewählte Zeile wird dann dunkler, wie die rote Umrandung zeigt. Nachdem Sie Ihre Auswahl getroffen haben, 
+            werden die Daten automatisch in die vorgesehenen Eingabefelder kopiert.
+        </label>
+        <br>
+        <div class="bild-container">
+            <img src="/static/side-bar.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+        <div class="bild-container">
+            <img src="/static/testdaten.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+        <h2>Modelltraining</h2>
+        <label>Nachdem Sie den Button "Modell trainieren" betätigt haben, öffnet sich ein Popup-Fenster. 
+            Dort können Sie eines von sechs verschiedenen Modellen auswählen. Im Anschluss daran haben Sie die Möglichkeit, zusätzliche Eingabeparameter 
+            festzulegen. Die drei Parameter "Dauer", "Durchschnittliche Temperatur" und "Waldfläche" sind bereits voreingestellt, da sie Pflicht sind.
+        </label>
+        <br>
+        <div class="bild-container">
+            <img src="/static/modelltraining.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+        <h2>Vorhersage</h2>
+        <label>Nachdem Sie entweder einen Testdatensatz ausgewählt oder eigene Werte eingegeben haben, wird eine Vorhersage durchgeführt. 
+            Im rot markierten Feld finden Sie das Ergebnis dieser Vorhersage, basierend auf Ihren Eingaben. Sofern Sie sich für einen Testdatensatz 
+            entschieden haben, wird zusätzlich der tatsächliche Wert präsentiert. Abschließend wird Ihnen der MSE (Mean Squared Error) zur Bewertung der 
+            Vorhersagegenauigkeit angezeigt.
+        </label>
+        <br>
+        <label>
+            Der MSE ist ein Maß für den durchschnittlichen Fehler eines Modells. 
+            Er berechnet den Durchschnitt der quadrierten Differenzen zwischen den tatsächlichen und den vom Modell vorhergesagten Werten. 
+            Ein niedriger MSE weist darauf hin, dass die Vorhersagen des Modells im Durchschnitt nahe an den tatsächlichen Werten liegen, 
+            während ein hoher MSE darauf hindeutet, dass es größere Abweichungen gibt.
+        </label>
+        <br>
+        <label>
+            Wenn Sie die Option "Intervall anzeigen" rechts neben dem "Legende"-Button aktiviert haben, 
+            wird Ihnen ein Vorhersageintervall präsentiert. Beachten Sie dabei, dass für die Darstellung eines solchen Intervalls bei 
+            neuronalen Netzen ein gesondertes Modell trainiert wird. Dieses Modell weist eine geringere Vorhersagegenauigkeit auf. Daher wird parallel 
+            dazu auch die Vorhersage des Standardmodells ohne Intervall angezeigt, welches genauer ist. Zusätzlich kann die Anzeige des Intervalls bei 
+            einigen Modellen zu einer längeren Rechenzeit führen.
+        </label>
+        <br>
+        <div class="bild-container">
+            <img src="/static/vorhersage.png" alt="Ein Beispielbild" class="mein-bild">
+        </div>
+
+    </div>
+
+</body>
+
+</html>

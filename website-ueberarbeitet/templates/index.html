@@ -11,8 +11,10 @@
                 <form action="{{ url_for('logout') }}" method="post" class="logout-form">
                     <input type="submit" value="Abmelden">
                 </form>
+                <a href="{{ url_for('docs') }}">Dokumentation</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Anmelden</a>
+                <a href="{{ url_for('docs') }}">Dokumentation</a>
             {% endif %}           
         </nav>
     </header>
