@@ -12,9 +12,11 @@
                     <input type="submit" value="Abmelden">
                 </form>
                 <a href="{{ url_for('docs') }}">Dokumentation</a>
+                <a href="{{ url_for('mse') }}">MSE alle Testdaten</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Anmelden</a>
                 <a href="{{ url_for('docs') }}">Dokumentation</a>
+                <a href="{{ url_for('mse') }}">MSE alle Testdaten</a>
             {% endif %}           
         </nav>
     </header>

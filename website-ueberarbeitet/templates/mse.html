@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mse.css') }}">
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Startseite</a>
+        </nav>
+    </header>
+    
+</head>
+
+<body class="hintergrundbild">
+    <div class="container-header">
+        <h2>Modell: {{ model_name }}  MSE: {{ mse_value }}</h2>
+    </div>    
+    <div class="table-container">
+        <table id="testData">
+            <thead>
+                <tr>
+                    <th>Jahreszeit</th>
+                    <th>Dauer in Tage</th>
+                    <th>Durchschnittliche Temperatur in C</th>
+                    <th>Max Windgeschwindigkeit in km/h</th>
+                    <th>Durchschnittlicher Niederschlag in mm</th>
+                    <th>Durchschnittliche Luftfeuchtigkeit in %</th>
+                    <th>Waldfläche in Hektar</th>
+                    <th>Anzahl der Waldbrände</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if test_data %}
+                    {% for row in test_data %}
+                    <tr onclick="copyToInputs(this)">
+                        <input type="hidden" name="selected_row_index">
+                        {% for key, value in row.items() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9">Keine Testdaten verfügbar</td>
+                    </tr>
+                {% endif %}
+            </tbody>                
+        </table>
+    </div>
+</body>
+</html>

@@ -160,6 +160,40 @@ neural_network_dropout = {}
 
 default_model_name = 'linear_regression-JDAMTHW'
 
+@app.route('/mse', methods=['GET', 'POST'])
+def mse():
+    model_name = request.form.get('model_name') if request.method == 'POST' else default_model_name
+    supported_columns = extract_supported_columns(model_name)
+    test_data = pd.read_csv('website-ueberarbeitet/data/combined_test_data.csv')
+    
+    # Überprüfe, ob das Modell und der Scaler verfügbar sind
+    if model_name not in available_models or model_name not in model_scalers:
+        return "Modell oder Scaler nicht gefunden", 404
+    
+    model = available_models[model_name]
+    scaler = model_scalers[model_name]
+    
+    # Bereite die Daten vor
+    data_to_predict = test_data[supported_columns]
+    data_to_predict_scaled = scaler.transform(data_to_predict)
+    
+    # Berechne die Vorhersagen
+    predictions = model.predict(data_to_predict_scaled).tolist()
+    
+    # Überprüfe, ob die Vorhersagen eine verschachtelte Liste sind (z.B. bei einigen Scikit-Learn Modellen)
+    if isinstance(predictions[0], list):
+        predictions = [item for sublist in predictions for item in sublist]
+    
+    # Füge die Vorhersagen zu den Testdaten hinzu
+    test_data['Vorhersage'] = predictions
+    test_data_list = test_data.to_dict(orient="records")
+    
+    # Berechne den MSE
+    actual_values = test_data['Anzahl der Waldbrände']
+    mse_value = mean_squared_error(actual_values, predictions)
+
+    return render_template('mse.html', test_data=test_data_list, model_name=model_name, mse_value=mse_value)
+
 def get_user_id():
     if current_user and current_user.is_authenticated:
         return int(current_user.get_id())
