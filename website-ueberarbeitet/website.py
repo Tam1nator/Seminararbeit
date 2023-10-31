@@ -8,27 +8,17 @@ from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error
 from tensorflow import keras
 import xgboost as xgb
-import datetime
 import joblib
 from sklearn.model_selection import train_test_split
 import numpy as np
-from scipy.stats import norm
 from keras.layers import Layer
 import tensorflow as tf
 from sklearn.utils import resample
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user, login_required
+from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 import pickle
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 from classes import User, MLModel, Scaler, NNDropoutModel, db
-from keras.utils import register_keras_serializable
-from keras.models import load_model
-import io
-import tempfile
 import os
-import zipfile
 
 
 app = Flask(__name__)
@@ -363,7 +353,6 @@ def index():
                 interval = (lower_bound, upper_bound)
 
         elif model_name.startswith("neural_network"):
-            from keras import backend as K
     
             prediction = model.predict(new_data_scaled)[0][0]
             if checkbox_default_value:
