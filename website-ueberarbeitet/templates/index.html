@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
     <title>Modellvorhersage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <header>
@@ -190,12 +191,15 @@
                             <option value="random_forest">Random Forest</option>
                             <option value="xgboost">XGBoost</option>
                             <option value="neural_network">Neuronales Netzwerk</option>
+                            <!--<option value="random_forest" disabled disabled style="color: red;">Random Forest - disabled</option>
+                            <option value="xgboost" disabled style="color: red;">XGBoost - disabled</option>
+                            <option value="neural_network" disabled style="color: red;">Neuronales Netzwerk - disabled</option>-->
                             <option value="svr">Support Vector Regression (SVR)</option>
                         </select>                     
                         <br><br>
                         
                         <label><input type="checkbox" name="columns" value="Jahreszeit"> Jahreszeit</label><br>
-                        <label><input type="checkbox" name="columns" value="Dauer" checked disabled> Dauer</label><br>
+                        <label><input type="checkbox" name="columns" value="Dauer" checked disabled > Dauer</label><br>
                         <label><input type="checkbox" name="columns" value="avgtemp_c" checked disabled> Durchschnittliche Temperatur</label><br>
                         <label><input type="checkbox" name="columns" value="maxwind_kph"> Max Windgeschwindigkeit</label><br>
                         <label><input type="checkbox" name="columns" value="totalprecip_mm"> Durchschnittlicher Niederschlag</label><br>
@@ -222,6 +226,26 @@
                         <button type="button" id="legendBtn">Legende</button>
                         <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}> <span>Intervall anzeigen</span>
                     </div>
+                <!--<div id="main-content">
+                    <h2>Wählen Sie ein Modell und geben Sie die Parameter ein</h2>
+                    <form action="/" method="post" id="predictionForm">
+                        <div class="legend">
+                            <label for="model_name">Wählen Sie ein Modell:</label>
+                            <select name="model_name" id="model_name">
+                                {% for model_name, _ in available_models.items() %}
+                                <option value="{{ model_name }}" data-columns="{{ ','.join(supported_columns[model_name]) }}"
+                                    {% if model_name == default_model_name %}selected{% endif %}
+                                    {% if model_name in ["neural_network-JDAMTHW", "xgboost-JDAMTHW"] %}disabled style="color: red;"{% endif %}>
+                                    {{ model_name }}
+                                </option>
+                                {% endfor %}
+                            </select>-->
+                            <!-- Button, um die Legende anzuzeigen -->
+                            <!--<button type="button" id="legendBtn">Legende</button>
+                            <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}>
+                            <span>Intervall anzeigen</span>
+                        </div>-->
+                    
 
                     
  
@@ -280,6 +304,9 @@
                     {% endif %}
                     {% if mse %}
                     <h3>MSE: {{ mse }}</h3>
+                    {% endif %}
+                    {% if percent %}
+                    <h3>Prozentuale Abweichung: {{ percent }} %</h3>
                     {% endif %}
                     {% if dropout_prediction %}
                     <h3>Dropout Vorhersage: {{ dropout_prediction }}</h3>

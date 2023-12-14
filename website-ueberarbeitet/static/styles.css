@@ -7,7 +7,6 @@
     display: flex;
 }
 .form-container, .table-container {
-    border: 10px solid rgba(60, 73, 65, 0.7);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 table {

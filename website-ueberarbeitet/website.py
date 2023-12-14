@@ -19,12 +19,13 @@ from flask_login import LoginManager, login_user, current_user, logout_user, log
 import pickle
 from classes import User, MLModel, Scaler, NNDropoutModel, db
 import os
+from werkzeug.security import generate_password_hash
 
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Papa123!@localhost:3307/datenbank'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Papa123!@localhost:3306/datenbank'
 db.init_app(app)
 
 
@@ -61,7 +62,7 @@ def register():
             return redirect(url_for('login'))
 
         # Neuen Benutzer erstellen und zur Datenbank hinzufügen
-        new_user = User(email=email, password=generate_password_hash(password, method='sha256'))
+        new_user = User(email=email, password=generate_password_hash(password, method='pbkdf2:sha256'))
         db.session.add(new_user)
         db.session.commit()
 
@@ -276,6 +277,7 @@ def index():
     default_model_name = model_name
     interval = (None, None) 
     mse = None
+    percent = None
     true_prediction = None
     dropout_prediction = None
 
@@ -402,16 +404,23 @@ def index():
                     true_value = test_data.loc[selected_data_index, 'Anzahl der Waldbrände']
                     mse = calculate_mse([true_value], [prediction])
                     true_prediction = request.form.get('true_prediction')
+                    #geht nicht bei werten<=0
+                    deviation = abs(true_value - prediction)
+                    percent = (deviation / true_value) * 100
+                    percent = round(percent, 2)
                 else:
                     mse = None
+                    percent = None
 
         #für decision_tree sonst js interpretiert als null/undefined
         if prediction == 0.0:
             prediction = "0"
         if mse == 0.0:
             mse = "0"
+        if percent == 0:
+            percent = "0"
 
-    return render_template('index.html', prediction=prediction, dropout_prediction=dropout_prediction, interval=interval, mse=mse, true_prediction=true_prediction, test_data=list(enumerate(selected_model_test_data.iterrows())), test_data_columns=selected_model_test_data.columns, available_models=available_models, supported_columns=supported_columns, default_model=default_model_name, checkbox_value=checkbox_default_value)
+    return render_template('index.html', prediction=prediction, percent=percent, dropout_prediction=dropout_prediction, interval=interval, mse=mse, true_prediction=true_prediction, test_data=list(enumerate(selected_model_test_data.iterrows())), test_data_columns=selected_model_test_data.columns, available_models=available_models, supported_columns=supported_columns, default_model=default_model_name, checkbox_value=checkbox_default_value)
 
 def predict_interval_bootstrap(model, new_data_scaled, model_name, n_iterations=10, alpha=0.05):
     """
