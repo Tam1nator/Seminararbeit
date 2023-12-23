@@ -202,7 +202,7 @@ th, td {
     
     /* Optional, um die Größe zu bearbeiten: */
     width: 50%;   /* oder eine feste Breite wie 400px */
-    height: 65%;  /* oder eine feste Höhe wie 300px */
+    height: 70%;  /* oder eine feste Höhe wie 300px */
     
 }
 
@@ -227,6 +227,61 @@ th, td {
 }
 
 #toggleButton:after {
+    font-size: 2em;
+    color: white;
+    display: block;
+    text-align: center;
+    line-height: 60px;
+}
+
+#sidebarRounded {
+    position: fixed;
+    top: 0;
+    right: -1100px; /* Die Breite der Seitenleiste als negativer Wert, damit sie außerhalb des Bildschirms startet */
+    width: 1100px;
+    height: 100%;
+    background-color: rgba(60, 73, 65, 0.7);  /* 50% transparentes Grau */
+    color: #ffffff;
+    overflow-y: scroll;
+    transition: right 0.4s; /* Animationsdauer */
+}
+
+#main-contentRounded {
+    transition: margin-right 0.3s; /* Animationsdauer */
+    color: #ffffff;
+    background-color: rgba(60, 73, 65, 0.7);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Optional, um die Größe zu bearbeiten: */
+    width: 50%;   /* oder eine feste Breite wie 400px */
+    height: 70%;  /* oder eine feste Höhe wie 300px */
+    
+}
+
+#toggleButtonRounded {
+    position: fixed;
+    right: -70px;
+    top: 62%;
+    transform: translateY(-50%);
+
+    width: 120px;
+    height: 60px;
+    background-color: rgba(60, 73, 65, 0.7);
+    border: none;
+    cursor: pointer;
+
+    transform: rotate(270deg) translateY(-50%);
+    /* Um die Trapezform zu erstellen */
+    clip-path: polygon(0% 100%, 17.5% 0%, 82.5% 0%, 100% 100%);
+    color: #ffffff;
+
+    transition: right 0.4s; /* Animationsdauer */
+}
+
+#toggleButtonRounded:after {
     font-size: 2em;
     color: white;
     display: block;

@@ -20,6 +20,7 @@ import pickle
 from classes import User, MLModel, Scaler, NNDropoutModel, db
 import os
 from werkzeug.security import generate_password_hash
+import math
 
 
 app = Flask(__name__)
@@ -155,7 +156,10 @@ default_model_name = 'linear_regression-JDAMTHW'
 def mse():
     model_name = request.form.get('model_name') if request.method == 'POST' else default_model_name
     supported_columns = extract_supported_columns(model_name)
-    test_data = pd.read_csv('website-ueberarbeitet/data/combined_test_data.csv')
+    if "-G" in model_name:
+        test_data = pd.read_csv('website-ueberarbeitet/data/werte_gerundet_test.csv')
+    else:
+        test_data = pd.read_csv('website-ueberarbeitet/data/combined_test_data.csv')
     
     # Überprüfe, ob das Modell und der Scaler verfügbar sind
     if model_name not in available_models or model_name not in model_scalers:
@@ -182,8 +186,9 @@ def mse():
     # Berechne den MSE
     actual_values = test_data['Anzahl der Waldbrände']
     mse_value = mean_squared_error(actual_values, predictions)
-
-    return render_template('mse.html', test_data=test_data_list, model_name=model_name, mse_value=mse_value)
+    rmse = math.sqrt(mse_value)
+    
+    return render_template('mse.html', test_data=test_data_list, model_name=model_name, mse_value=mse_value, rmse=rmse)
 
 def get_user_id():
     if current_user and current_user.is_authenticated:
@@ -271,13 +276,14 @@ def index():
         checkbox_default_value = current_user.checkbox_value
     # Testdaten einmalig laden
     test_data = pd.read_csv('website-ueberarbeitet\data\combined_test_data.csv')
+    test_data_rounded = pd.read_csv('website-ueberarbeitet\data\werte_gerundet_test.csv')
     prediction = None
     interval = None  # Neuer Wert für das Vorhersageintervall
     model_name = request.form.get('model_name') if request.method == 'POST' else default_model_name
     default_model_name = model_name
     interval = (None, None) 
     mse = None
-    percent = None
+    rmse = None
     true_prediction = None
     dropout_prediction = None
 
@@ -285,10 +291,12 @@ def index():
         model = available_models.get(model_name)
         supported_columns = extract_supported_columns(model_name)
         selected_model_test_data = test_data
+        selected_model_test_data_rounded = test_data_rounded
     else:
         model = None
         supported_columns = []
         selected_model_test_data = test_data
+        selected_model_test_data_rounded = test_data_rounded
 
     if request.method == 'POST' and model:  # Überprüfung, ob ein Modell trainiert wurde
         # Daten für die Vorhersage vorbereiten
@@ -399,28 +407,33 @@ def index():
                     float(request.form.get(column)) == test_data.loc[selected_data_index, column]
                     for column in supported_columns
                 )
+                data_matches_rounded = all(
+                    float(request.form.get(column)) == test_data_rounded.loc[selected_data_index, column]
+                    for column in supported_columns
+                )
                 
-                if data_matches:
-                    true_value = test_data.loc[selected_data_index, 'Anzahl der Waldbrände']
+                if data_matches or data_matches_rounded:
+                    if data_matches:
+                        true_value = test_data.loc[selected_data_index, 'Anzahl der Waldbrände']
+                    elif data_matches_rounded:
+                        true_value = test_data_rounded.loc[selected_data_index, 'Anzahl der Waldbrände']
                     mse = calculate_mse([true_value], [prediction])
                     true_prediction = request.form.get('true_prediction')
-                    #geht nicht bei werten<=0
-                    deviation = abs(true_value - prediction)
-                    percent = (deviation / true_value) * 100
-                    percent = round(percent, 2)
+                    rmse = math.sqrt(mse)
+                    
                 else:
                     mse = None
-                    percent = None
+                    rmse = None
 
         #für decision_tree sonst js interpretiert als null/undefined
         if prediction == 0.0:
             prediction = "0"
         if mse == 0.0:
             mse = "0"
-        if percent == 0:
-            percent = "0"
+        if rmse == 0:
+            rmse = "0"
 
-    return render_template('index.html', prediction=prediction, percent=percent, dropout_prediction=dropout_prediction, interval=interval, mse=mse, true_prediction=true_prediction, test_data=list(enumerate(selected_model_test_data.iterrows())), test_data_columns=selected_model_test_data.columns, available_models=available_models, supported_columns=supported_columns, default_model=default_model_name, checkbox_value=checkbox_default_value)
+    return render_template('index.html', prediction=prediction, rmse=rmse, dropout_prediction=dropout_prediction, interval=interval, mse=mse, true_prediction=true_prediction, test_data=list(enumerate(selected_model_test_data.iterrows())), test_data_columns=selected_model_test_data.columns, test_data_rounded=list(enumerate(selected_model_test_data_rounded.iterrows())), test_data_rounded_columns=selected_model_test_data_rounded.columns, available_models=available_models, supported_columns=supported_columns, default_model=default_model_name, checkbox_value=checkbox_default_value)
 
 def predict_interval_bootstrap(model, new_data_scaled, model_name, n_iterations=10, alpha=0.05):
     """
@@ -454,6 +467,13 @@ def predict_interval_bootstrap(model, new_data_scaled, model_name, n_iterations=
     selected_columns = [column_legend[char] for char in suffix]
 
     selected_columns = sorted(selected_columns, key=lambda x: column_order[x])
+
+    checkbox_round_data = 'checkbox_round_data' in request.form
+
+    if checkbox_round_data:
+        training_data = pd.read_csv('website-ueberarbeitet\data\werte_gerundet.csv')
+    else:
+        training_data = pd.read_csv('website-ueberarbeitet\data\jahreszeit-kodiert.csv')
 
     X_train = training_data[selected_columns]
     y_train = training_data['Anzahl der Waldbrände']
@@ -506,7 +526,7 @@ def extract_supported_columns(model_name):
     }
     if '-' not in model_name:
         return []
-    supported_columns = [column_legend[char] for char in model_name.split('-')[1]]
+    supported_columns = [column_legend[char] for char in model_name.split('-')[1] if char in column_legend]
     return supported_columns
 
 @app.route('/get_supported_columns', methods=['POST'])
@@ -540,6 +560,12 @@ def train_model():
         }
     selected_columns = sorted(selected_columns, key=lambda x: column_order[x])
 
+    checkbox_round_data = 'checkbox_round_data' in request.form
+
+    if checkbox_round_data:
+        training_data = pd.read_csv('website-ueberarbeitet\data\werte_gerundet.csv')
+    else:
+        training_data = pd.read_csv('website-ueberarbeitet\data\jahreszeit-kodiert.csv')
     # Filtern Sie die Trainingsdaten basierend auf den ausgewählten Spalten
     X = training_data[selected_columns]
     y = training_data['Anzahl der Waldbrände']  # Annahme, dass dies Ihre Zielvariable ist
@@ -568,7 +594,10 @@ def train_model():
     }
     
     selected_param_string = ''.join([param_codes[param] for param in selected_columns])
-    model_display_name = f"{model_name}-{selected_param_string}"  # Hier hinzufügen Sie das Suffix
+    if checkbox_round_data:
+        model_display_name = f"{model_name}-{selected_param_string}-G"  # Hier hinzufügen Sie das Suffix
+    else:
+        model_display_name = f"{model_name}-{selected_param_string}"
     # Updating the default model name when a new model is trained
     global default_model_name
     default_model_name = model_display_name

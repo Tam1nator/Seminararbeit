@@ -32,7 +32,7 @@ nav a:hover {
 }
 
 .container {
-    margin-top: 2442px;
+    margin-top: 2680px;
     transition: margin-right 0.3s; /* Animationsdauer */
     color: #ffffff;
     background-color: rgba(60, 73, 65, 0.7);
@@ -43,7 +43,7 @@ nav a:hover {
     
     /* Optional, um die Größe zu bearbeiten: */
     width: 50%;   /* oder eine feste Breite wie 400px */
-    height: 600%;  /* oder eine feste Höhe wie 300px */
+    height: 650%;  /* oder eine feste Höhe wie 300px */
     
 }
 
@@ -98,5 +98,33 @@ nav a:hover {
     object-fit: cover;
     object-position: center;
     border: 5px solid black;
+}
+
+/* Sidebar Styling */
+#sidebar {
+    position: fixed;
+    top: 200px;
+    left: 150px;
+    width: 200px; /* Breite der Sidebar */
+    height: 32%; /* volle Höhe */
+    background-color: rgba(60, 73, 65, 0.7);
+    color: white; /* Weiße Textfarbe */
+    padding: 20px; /* Etwas Platz im Inneren */
+}
+
+#sidebar ul {
+    list-style: none; /* Keine Bullets */
+    padding: 0;
+}
+
+#sidebar ul li a {
+    color: white;
+    text-decoration: none; /* Keine Unterstreichung */
+    display: block; /* Macht die Links block-level für einfacheres Klicken */
+    padding: 10px 0; /* Etwas Abstand */
+}
+
+#sidebar ul li a:hover {
+    text-decoration: underline; /* Hinzufügen der Unterstreichung beim Hover */
 }
 

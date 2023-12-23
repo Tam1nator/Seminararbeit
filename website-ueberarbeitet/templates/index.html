@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <title>Modellvorhersage</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">ipad test produktion-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <header>
@@ -12,12 +12,12 @@
                 <form action="{{ url_for('logout') }}" method="post" class="logout-form">
                     <input type="submit" value="Abmelden">
                 </form>
-                <a href="{{ url_for('docs') }}">Dokumentation</a>
-                <a href="{{ url_for('mse') }}">MSE alle Testdaten</a>
+                <a href="{{ url_for('docs') }}">Dokumentation/Anleitung</a>
+                <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Anmelden</a>
-                <a href="{{ url_for('docs') }}">Dokumentation</a>
-                <a href="{{ url_for('mse') }}">MSE alle Testdaten</a>
+                <a href="{{ url_for('docs') }}">Dokumentation/Anleitung</a>
+                <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>
             {% endif %}           
         </nav>
     </header>
@@ -70,6 +70,18 @@
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebar");
             var button = document.getElementById('toggleButton');
+
+            if (sidebar.style.right === "0px" || sidebar.style.right === "") {
+                sidebar.style.right = "-1100px";
+                button.style.right = '-70px';
+            } else {
+                sidebar.style.right = "0px";
+                button.style.right = '1030px';
+            }
+        }
+        function toggleSidebarRounded() {
+            const sidebar = document.getElementById("sidebarRounded");
+            var button = document.getElementById('toggleButtonRounded');
 
             if (sidebar.style.right === "0px" || sidebar.style.right === "") {
                 sidebar.style.right = "-1100px";
@@ -197,6 +209,8 @@
                             <option value="svr">Support Vector Regression (SVR)</option>
                         </select>                     
                         <br><br>
+                        <label><input type="checkbox" name="checkbox_round_data" value="checked"> <span>Trainingsdaten runden</span></label>
+                        <br><br>
                         
                         <label><input type="checkbox" name="columns" value="Jahreszeit"> Jahreszeit</label><br>
                         <label><input type="checkbox" name="columns" value="Dauer" checked disabled > Dauer</label><br>
@@ -261,6 +275,7 @@
                                 <li>T: Durchschnittlicher Niederschlag in mm</li>
                                 <li>H: Durchschnittliche Luftfeuchtigkeit in %</li>
                                 <li>W: Waldfläche in Hektar</li>
+                                <li>G: gerundete Trainingsdaten</li>
                             </ul>
                             <button type="button" onclick="closeLegendModal()">Schließen</button>
                         </div>
@@ -305,8 +320,8 @@
                     {% if mse %}
                     <h3>MSE: {{ mse }}</h3>
                     {% endif %}
-                    {% if percent %}
-                    <h3>Prozentuale Abweichung: {{ percent }} %</h3>
+                    {% if rmse %}
+                    <h3>RMSE: {{ rmse }}</h3>
                     {% endif %}
                     {% if dropout_prediction %}
                     <h3>Dropout Vorhersage: {{ dropout_prediction }}</h3>
@@ -343,6 +358,41 @@
                                 <input type="hidden" name="selected_row_index" value="{{ index }}">
                                 {% for item in row[1] %}
                                 <td data-column="{{ test_data_columns[index] }}">{{ item }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8">Keine Testdaten verfügbar</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>                
+                </table>
+            </div>
+        </div>
+        <div id="sidebarRounded">
+            <button id="toggleButtonRounded" onclick="toggleSidebarRounded()">gerundete<br>Testdaten</button>
+            <div class="table-container">
+                <table id="testData">
+                    <thead>
+                        <tr>
+                            <th>Jahreszeit</th>
+                            <th>Dauer in Tage</th>
+                            <th>Durchschnittliche Temperatur in C</th>
+                            <th>Max Windgeschwindigkeit in km/h</th>
+                            <th>Durchschnittlicher Niederschlag in mm</th>
+                            <th>Durchschnittliche Luftfeuchtigkeit in %</th>
+                            <th>Waldfläche in Hektar</th>
+                            <th>Anzahl der Waldbrände</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if test_data_rounded %}
+                            {% for index, row in test_data_rounded %}
+                            <tr onclick="copyToInputs(this)">
+                                <input type="hidden" name="selected_row_index" value="{{ index }}">
+                                {% for item in row[1] %}
+                                <td data-column="{{ test_data_rounded_columns[index] }}">{{ item }}</td>
                                 {% endfor %}
                             </tr>
                             {% endfor %}
