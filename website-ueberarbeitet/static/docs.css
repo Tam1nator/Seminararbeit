@@ -128,3 +128,36 @@ nav a:hover {
     text-decoration: underline; /* Hinzufügen der Unterstreichung beim Hover */
 }
 
+@media only screen 
+  and (min-device-width : 768px) 
+  and (max-device-width : 1024px) 
+  and (orientation : landscape) {
+
+    .container {
+        margin-top: 2391px;
+        transition: margin-right 0.3s; /* Animationsdauer */
+        color: #ffffff;
+        background-color: rgba(60, 73, 65, 0.7);
+        position: absolute;
+        top: 50%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+        
+        /* Optional, um die Größe zu bearbeiten: */
+        width: 50%;   /* oder eine feste Breite wie 400px */
+        height: 730%;  /* oder eine feste Höhe wie 300px */
+        
+    }
+
+    #sidebar {
+        position: fixed;
+        top: 200px;
+        left: 67px;
+        width: 200px; /* Breite der Sidebar */
+        height: 45%; /* volle Höhe */
+        background-color: rgba(60, 73, 65, 0.7);
+        color: white; /* Weiße Textfarbe */
+        padding: 20px; /* Etwas Platz im Inneren */
+    }
+    
+  }

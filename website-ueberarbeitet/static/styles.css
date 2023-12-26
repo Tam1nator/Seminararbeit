@@ -374,7 +374,7 @@ nav a:hover {
 #main-content h2 {
     padding-top: 15px;
     padding-left: 15px;
-    font-size: 1.5em; /* Vergrößert den Text von h3 Elementen */
+    font-size: 1.5em; /* Vergrößert den Text von h2 Elementen */
     margin-left: 20px;
    }
 
@@ -485,4 +485,198 @@ nav a:hover {
 #main-content input[type="checkbox"] {
     transform: scale(1.5); /* Vergrößert das Kontrollkästchen */
     margin-left: 30px; /* Optional: Fügt etwas Abstand rechts vom Kontrollkästchen hinzu */
+}
+
+@media only screen 
+  and (min-device-width : 768px) 
+  and (max-device-width : 1024px) 
+  and (orientation : landscape) {
+    
+    #toggleButtonRounded {
+        position: fixed;
+        right: -70px;
+        top: 64%;
+        transform: translateY(-50%);
+    
+        width: 120px;
+        height: 60px;
+        background-color: rgba(60, 73, 65, 0.7);
+        border: none;
+        cursor: pointer;
+    
+        transform: rotate(270deg) translateY(-50%);
+        /* Um die Trapezform zu erstellen */
+        clip-path: polygon(0% 100%, 17.5% 0%, 82.5% 0%, 100% 100%);
+        color: #ffffff;
+    
+        transition: right 0.4s; /* Animationsdauer */
+    }
+
+    #main-content {
+        transition: margin-right 0.3s; /* Animationsdauer */
+        color: #ffffff;
+        background-color: rgba(60, 73, 65, 0.7);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        /* Optional, um die Größe zu bearbeiten: */
+        width: 70%;   /* oder eine feste Breite wie 400px */
+        height: 75%;  /* oder eine feste Höhe wie 300px */
+        
+    }
+    #main-content h3 {
+        padding-top: 7px;
+        padding-left: 15px;
+        font-size: 20px; /* Vergrößert den Text von h3 Elementen */
+        margin-bottom: 7px; /* Optional: Fügt etwas Abstand unter den h3 Elementen hinzu */
+        margin-left: 20px;
+    }
+    #main-content h2 {
+        padding-top: 15px;
+        padding-left: 15px;
+        font-size: 1.2em; /* Vergrößert den Text von h2 Elementen */
+        margin-left: 20px;
+       }
+    
+    /* Reduziere die Höhe der Inputfelder */
+    #main-content input[type="number"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+    }
+    
+    #main-content input[name="Jahreszeit"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 250px;
+    }
+    
+    #main-content input[name="Dauer"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 217px;
+    }
+    
+    #main-content input[name="avgtemp_c"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 60px;
+    }
+    
+    #main-content input[name="maxwind_kph"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 55px;
+    }
+    
+    #main-content input[name="totalprecip_mm"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 24px;
+    }
+    
+    #main-content input[name="avghumidity"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 20px;
+    }
+    
+    #main-content input[name="Waldfläche in Hektar"] {
+        height: 25px; /* oder den gewünschten Wert */
+        padding-left: 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        margin-left: 161px;
+    }
+    
+    #main-content select {
+        height: 25px; /* oder den gewünschten Wert */;
+        padding: 0 5px;
+        font-size: 14px; /* optional, um die Schriftgröße anzupassen */
+        width: auto;
+    }
+    
+    /* Reduziere die Höhe der Buttons */
+    #main-content button[name="train_model"] {
+        height: 30px;
+        font-size: 14px;
+        padding: 5px 15px;
+        margin-left: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+        margin-left: 35px;
+    }
+    
+    #main-content button {
+        height: 30px;
+        font-size: 14px;
+        padding: 5px 15px;
+        margin-left: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+    }
+    
+    #main-content label {
+        font-size: 1.2em;
+        padding-top: 15px;
+        padding-left: 15px;
+        margin-right: 10px; /* Abstand nach den Labels */
+        margin-left: 20px;
+    }
+    
+    #main-content input[type="submit"] {
+        height: 30px;
+        font-size: 14px;
+        padding: 5px 15px;
+        margin-left: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+        margin-left: 35px;
+    }
+    
+    #main-content input[type="checkbox"] {
+        transform: scale(1.5); /* Vergrößert das Kontrollkästchen */
+        margin-left: 30px; /* Optional: Fügt etwas Abstand rechts vom Kontrollkästchen hinzu */
+    }
+
+    .modal {
+        z-index: 1000;
+        display: none;
+        transition: margin-right 0.3s; /* Animationsdauer */
+        color: #ffffff;
+        /*background-color: rgba(60, 73, 65, 0.7);*/
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 95%;   /* oder eine feste Breite wie 400px */
+        height: 85%;  /* oder eine feste Höhe wie 300px */
+    }
+    
+    .modal-content input[type="submit"] {
+        height: 30px;
+        font-size: 14px;
+        padding: 5px 15px;
+        margin-left: 30px;
+        margin-bottom: 5px;
+        margin-top: 15px;
+        cursor: pointer; /* Zeigt den Zeiger-Cursor, wenn man über den Button fährt */
+    }
+
+    .modal-content input[type="checkbox"] {
+        transform: scale(1.5); /* Vergrößert das Kontrollkästchen */
+        margin-bottom: 5px;
+        margin-top: 5px;
+        margin-right: 5px;
+    }
 }

@@ -50,4 +50,22 @@ button:hover {
     background: #218838;
 }
 
+@media only screen 
+  and (min-device-width : 768px) 
+  and (max-device-width : 1024px) 
+  and (orientation : landscape) {
 
+    .container {
+        transition: margin-right 0.3s; /* Animationsdauer */
+        color: #ffffff;
+        background-color: rgba(60, 73, 65, 0.7);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        /* Optional, um die Größe zu bearbeiten: */
+        width: 55%;   /* oder eine feste Breite wie 400px */
+        height: 40%;  /* oder eine feste Höhe wie 300px */
+    }
+  }
