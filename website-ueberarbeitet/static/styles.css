@@ -512,13 +512,14 @@ nav a:hover {
   .popup {
     display: none; /* Versteckt das Popup zu Beginn */
     position: absolute;
-    left: 25px; /* Positionierung neben dem Info-Symbol */
-    width: 200px; /* Breite des Popups */
+    right: 100%; /* Positioniert das Popup links vom Info-Symbol */
+    margin-right: 10px; /* Fügt ein wenig Platz zwischen Symbol und Popup hinzu */
+    width: 300px; /* Breite des Popups */
     padding: 10px; /* Innenabstand */
     border: 1px solid #ddd; /* Rahmen */
     background-color: #f9f9f9; /* Hintergrundfarbe */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Schattenwurf */
-    z-index: 1; /* Stellt sicher, dass das Popup über anderen Elementen liegt */
+    z-index: 10; /* Stellt sicher, dass das Popup über anderen Elementen liegt */
   }
   
   /* Optional: Stil für das Anzeigen des Popups */
