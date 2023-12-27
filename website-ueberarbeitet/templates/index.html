@@ -13,12 +13,24 @@
                     <input type="submit" value="Abmelden">
                 </form>
                 <a href="{{ url_for('docs') }}">Dokumentation/Anleitung</a>
-                <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>
+                <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>    
             {% else %}
                 <a href="{{ url_for('login') }}">Anmelden</a>
                 <a href="{{ url_for('docs') }}">Dokumentation/Anleitung</a>
                 <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>
-            {% endif %}           
+            {% endif %}   
+            <div class="info-container">
+                <span class="info-icon" onclick="togglePopup()">i</span>
+                <div class="popup" id="infoPopup">
+                    <ul>
+                        <strong>Aktuelle Probleme:</strong>
+                        <li>Die Vorhersagen durch das neuronale Netz und XGBoost sind derzeit aufgrund von Serverproblemen nicht verfügbar.</li>
+                        <li>Aktuelle Serverprobleme verhindern das Training der Modelle XGBoost, neuronales Netz und Random Forest.</li>
+                        <strong>Bekannte Bugs:</strong>
+                        <li>Beim ersten Laden der Seite ist es erforderlich, die Genauigkeit des Modells auszuwählen und anschließend zur Startseite zurückzukehren, um die Seitenleiste korrekt anzuzeigen.</li>
+                    </ul>                      
+                </div>
+            </div>       
         </nav>
     </header>
     <body>
@@ -66,6 +78,11 @@
                 });
             });
         });
+
+        function togglePopup() {
+            var popup = document.getElementById("infoPopup");
+            popup.classList.toggle("show");
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebar");

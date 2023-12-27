@@ -487,6 +487,45 @@ nav a:hover {
     margin-left: 30px; /* Optional: Fügt etwas Abstand rechts vom Kontrollkästchen hinzu */
 }
 
+/* Container für das Info-Symbol und das Popup */
+.info-container {
+    position: relative;
+    display: inline-block; /* Oder wie es in Ihr Layout passt */
+  }
+  
+  /* Stil für das Info-Symbol */
+  .info-icon {
+    cursor: pointer;
+    display: inline-block;
+    width: 20px; /* Größe des Symbols */
+    height: 20px; /* Größe des Symbols */
+    border-radius: 50%; /* Kreisform */
+    background-color: #007bff; /* Hintergrundfarbe */
+    color: white; /* Farbe des Textes */
+    text-align: center; /* Zentriert den Text */
+    line-height: 20px; /* Zentriert den Text vertikal */
+    user-select: none; /* Verhindert das Auswählen des Textes */
+    border: 2px solid red; /* Rote Umrandung */
+  }
+  
+  /* Stil für das Popup */
+  .popup {
+    display: none; /* Versteckt das Popup zu Beginn */
+    position: absolute;
+    left: 25px; /* Positionierung neben dem Info-Symbol */
+    width: 200px; /* Breite des Popups */
+    padding: 10px; /* Innenabstand */
+    border: 1px solid #ddd; /* Rahmen */
+    background-color: #f9f9f9; /* Hintergrundfarbe */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Schattenwurf */
+    z-index: 1; /* Stellt sicher, dass das Popup über anderen Elementen liegt */
+  }
+  
+  /* Optional: Stil für das Anzeigen des Popups */
+  .popup.show {
+    display: block;
+  }  
+
 @media only screen 
   and (min-device-width : 768px) 
   and (max-device-width : 1024px) 
