@@ -156,10 +156,7 @@ default_model_name = 'linear_regression-JDAMTHW'
 def mse():
     model_name = request.form.get('model_name') if request.method == 'POST' else default_model_name
     supported_columns = extract_supported_columns(model_name)
-    if "-G" in model_name:
-        test_data = pd.read_csv('website-ueberarbeitet/data/werte_gerundet_test.csv')
-    else:
-        test_data = pd.read_csv('website-ueberarbeitet/data/combined_test_data.csv')
+    test_data = pd.read_csv('website-ueberarbeitet/data/combined_test_data.csv')
     
     # Überprüfe, ob das Modell und der Scaler verfügbar sind
     if model_name not in available_models or model_name not in model_scalers:
@@ -461,7 +458,14 @@ def predict_interval_bootstrap(model, new_data_scaled, model_name, n_iterations=
     }
 
     # Modellnamen zerteilen, um das Suffix zu extrahieren
-    suffix = model_name.split("-")[-1]
+    #suffix = model_name.split("-")[-1]
+
+    # Modellnamen zerteilen, um das Suffix zu extrahieren
+    cleaned_model_name = model_name[:-2] if model_name.endswith("-G") else model_name
+
+    # Teile den bereinigten Modellnamen und extrahiere das Suffix
+    parts = cleaned_model_name.split("-")
+    suffix = "-".join(parts[1:])  # Nimmt alle Teile nach dem ersten "-"
 
     # Spaltennamen aus dem Suffix extrahieren
     selected_columns = [column_legend[char] for char in suffix]

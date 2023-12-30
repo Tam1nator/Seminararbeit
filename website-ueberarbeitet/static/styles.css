@@ -525,7 +525,13 @@ nav a:hover {
   /* Optional: Stil für das Anzeigen des Popups */
   .popup.show {
     display: block;
-  }  
+  }
+  
+  /* Styles for unordered lists within the popup */
+.popup ul {
+    list-style-type: disc; /* Style of bullet points */
+    list-style-position: inside; /* Ensures bullets are inside the popup */
+}
 
 @media only screen 
   and (min-device-width : 768px) 
