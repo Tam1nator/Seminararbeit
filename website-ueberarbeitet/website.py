@@ -152,6 +152,22 @@ neural_network_dropout = {}
 
 default_model_name = 'linear_regression-JDAMTHW'
 
+@app.route('/auswertung')
+def auswertung():
+    try:
+        # Pfad zur CSV-Datei
+        filepath = 'C:/Users/tamin/OneDrive/Dokumente/Schule/Sek 2/Seminararbeit/website-ueberarbeitet/data/Auswertung.csv'
+        
+        # Lesen der CSV-Datei
+        auswertung_data = pd.read_csv(filepath, sep=';')
+        auswertung_data_list = auswertung_data.to_dict(orient='records')
+
+    except Exception as e:
+        print(e)  # Fehlerausgabe für das Debugging
+        auswertung_data_list = []  # Leere Liste, falls das Lesen der Datei fehlschlägt
+
+    return render_template('auswertung.html', auswertung_data=auswertung_data_list)
+
 @app.route('/mse', methods=['GET', 'POST'])
 def mse():
     model_name = request.form.get('model_name') if request.method == 'POST' else default_model_name
@@ -170,7 +186,12 @@ def mse():
     data_to_predict_scaled = scaler.transform(data_to_predict)
     
     # Berechne die Vorhersagen
-    predictions = model.predict(data_to_predict_scaled).tolist()
+    if isinstance(model, xgb.Booster):  # check if the model is an instance of XGBoost Booster
+        dmatrix_data = xgb.DMatrix(data_to_predict_scaled)  # convert the data to DMatrix format
+        predictions = model.predict(dmatrix_data).tolist()  # make predictions
+    else:
+        predictions = model.predict(data_to_predict_scaled).tolist()  # for non-xgboost models
+
     
     # Überprüfe, ob die Vorhersagen eine verschachtelte Liste sind (z.B. bei einigen Scikit-Learn Modellen)
     if isinstance(predictions[0], list):
@@ -184,6 +205,26 @@ def mse():
     actual_values = test_data['Anzahl der Waldbrände']
     mse_value = mean_squared_error(actual_values, predictions)
     rmse = math.sqrt(mse_value)
+
+    # Erweiterter Code zum Speichern der Ergebnisse in der CSV-Datei
+    '''
+    csv_file_path = 'C:/Users/tamin/OneDrive/Dokumente/Schule/Sek 2/Seminararbeit/Auswertung.csv'  # Geben Sie den Pfad zur CSV-Datei an
+
+    # Überprüfen, ob die Datei bereits existiert und die Spalten enthält
+    if not os.path.exists(csv_file_path) or not os.path.isfile(csv_file_path):
+        df = pd.DataFrame(columns=['Modell', 'MSE', 'RMSE'])
+    else:
+        df = pd.read_csv(csv_file_path, sep=';')
+
+    # Überprüfen, ob der Modellname bereits vorhanden ist
+    if model_name not in df['Modell'].values:
+        # Füge neue Zeile mit den Werten hinzu, wenn Modellname noch nicht vorhanden ist
+        new_row_df = pd.DataFrame([{'Modell': model_name, 'MSE': mse_value, 'RMSE': rmse}])
+        df = pd.concat([df, new_row_df], ignore_index=True)
+
+    # Speichern der Datei
+    df.to_csv(csv_file_path, index=False, sep=';')
+    '''
     
     return render_template('mse.html', test_data=test_data_list, model_name=model_name, mse_value=mse_value, rmse=rmse)
 

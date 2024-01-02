@@ -1,0 +1,201 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: rgba(60, 73, 65, 0.5);
+    padding: 10px 0;
+    padding-top: 20px;
+    text-align: center;
+    height: 30px;
+}
+
+nav a {
+    color: #fff;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.hintergrundbild {
+    background-image: url("1.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 10vh;
+}
+
+.table-container {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 100%; /* Oder die gewünschte Breite */
+    display: flex;
+    justify-content: center; /* Zentriert die Inhalte horizontal */
+    align-items: center; /* Zentriert die Inhalte vertikal, wenn Sie auch eine Höhe definieren */
+}
+
+table {
+    width: 60%;
+    border-collapse: collapse;
+    background-color: rgba(60, 73, 65, 0.7);
+    
+}
+table, th, td {
+    border: 1px solid rgba(60, 73, 65, 0.5);
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    color: #ffffff;
+}
+ 
+h2 {
+    font-size: 1.6em;
+    padding-top: 15px;
+    padding-left: 15px;
+    margin-right: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.container-header {
+    background-color: rgba(60, 73, 65, 0.7);
+    text-align: center; 
+    padding: 10px;
+    margin: 20px auto; 
+    width: 60%;
+    height: 60px;
+    display: flex; /* Aktiviert Flexbox für diesen Container */
+    flex-direction: row; /* Ausrichtung der Kinder in einer Zeile */
+    align-items: center; /* Zentriert die Kinder vertikal */
+    justify-content: center; /* Ausrichtung der Kinder am Anfang (linken Rand) */
+}
+
+.container-header button {
+    margin: 0 10px; /* Fügt horizontalen Abstand hinzu; passen Sie den Wert nach Bedarf an */
+}
+
+button {
+    position: relative;
+    background: #444;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    letter-spacing: 0.1rem;
+    font-size: 1rem;
+    padding: 1rem 3rem;
+    transition: 0.2s;
+  }
+  
+  button:hover {
+    letter-spacing: 0.2rem;
+    padding: 1.1rem 3.1rem;
+    background: var(--clr);
+    color: var(--clr);
+    /* box-shadow: 0 0 35px var(--clr); */
+    animation: box 3s infinite;
+  }
+  
+  button::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: rgba(60, 73, 65, 0.7);
+  }
+  
+  button span {
+    position: relative;
+    z-index: 1;
+  }
+  button i {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  
+  button i::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    left: 80%;
+    top: -2px;
+    border: 2px solid var(--clr);
+    background: #272822;
+    transition: 0.2s;
+  }
+  
+  button:hover i::before {
+    width: 15px;
+    left: 20%;
+    animation: move 3s infinite;
+  }
+  
+  button i::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    left: 20%;
+    bottom: -2px;
+    border: 2px solid var(--clr);
+    background: #272822;
+    transition: 0.2s;
+  }
+  
+  button:hover i::after {
+    width: 15px;
+    left: 80%;
+    animation: move 3s infinite;
+  }
+  
+  @keyframes move {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes box {
+    0% {
+      box-shadow: #27272c;
+    }
+    50% {
+      box-shadow: 0 0 25px var(--clr);
+    }
+    100% {
+      box-shadow: #27272c;
+    }
+  }
+  
+  @media only screen 
+  and (min-device-width : 768px) 
+  and (max-device-width : 1024px) 
+  and (orientation : landscape) {
+
+    .container-header {
+        background-color: rgba(60, 73, 65, 0.7);
+        text-align: center; 
+        padding: 10px;
+        margin: 20px auto; 
+        width: 80%;
+        height: 60px;
+        display: flex; /* Aktiviert Flexbox für diesen Container */
+        flex-direction: row; /* Ausrichtung der Kinder in einer Zeile */
+        align-items: center; /* Zentriert die Kinder vertikal */
+        justify-content: center; /* Ausrichtung der Kinder am Anfang (linken Rand) */
+    }
+  }

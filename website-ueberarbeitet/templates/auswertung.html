@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auswertung der Modelle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auswertung.css') }}">
+    <script>
+        // JavaScript zum Sortieren der Tabelle
+        function sortTable(type) {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("testData");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[2]; // RMSE Spalte
+                    y = rows[i + 1].getElementsByTagName("TD")[2]; // RMSE Spalte
+                    if (type === 'best' && parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    } else if (type === 'worst' && parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Startseite</a>
+        </nav>
+    </header>
+    
+</head>
+
+<body class="hintergrundbild">
+    <div class="container-header">
+        <!-- Buttons für das Sortieren -->
+        <button style="--clr:#39FF14" onclick="sortTable('best')"><span>Bestes Modell</span><i></i></button>
+        <button style="--clr:#FF44CC" onclick="sortTable('worst')"><span>Schlechtestes Modell</span><i></i></button>
+        <button style="--clr:#0FF0FC" onclick="window.location.reload();"><span>Standard</span><i></i></button>
+    </div>    
+    <div class="table-container">
+        <table id="testData">
+            <thead>
+                <tr>
+                    <th>Modell</th>
+                    <th>MSE</th>
+                    <th>RMSE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if auswertung_data %}
+                    {% for row in auswertung_data %}
+                    <tr onclick="copyToInputs(this)">
+                        <input type="hidden" name="selected_row_index">
+                        {% for key, value in row.items() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9">Keine Testdaten verfügbar</td>
+                    </tr>
+                {% endif %}
+            </tbody>                
+        </table>
+    </div>
+</body>
+</html>

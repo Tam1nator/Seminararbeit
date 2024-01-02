@@ -14,10 +14,12 @@
                 </form>
                 <a href="{{ url_for('docs') }}">Dokumentation/Anleitung</a>
                 <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>    
+                <a href="{{ url_for('auswertung') }}">Auswertung der Modelle</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Anmelden</a>
                 <a href="{{ url_for('docs') }}">Dokumentation/Anleitung</a>
                 <a href="{{ url_for('mse') }}">Genauigkeit des Modells</a>
+                <a href="{{ url_for('auswertung') }}">Auswertung der Modelle</a>
             {% endif %}   
             <div class="info-container">
                 <span class="info-icon" onclick="togglePopup()">i</span>
@@ -26,8 +28,13 @@
                         <strong>Aktuelle Probleme:</strong>
                         <li>Die Vorhersagen durch das neuronale Netz und XGBoost sind derzeit aufgrund von Serverproblemen nicht verfügbar.</li>
                         <li>Aktuelle Serverprobleme verhindern das Training der Modelle XGBoost, neuronales Netz und Random Forest.</li>
+                        <li>Sollte ein 'Internal Server Error' auftreten, navigieren Sie bitte zurück und versuchen Sie es erneut.</li>
                         <strong>Bekannte Bugs:</strong>
-                        <li>Beim ersten Laden der Seite ist es erforderlich, die Genauigkeit des Modells auszuwählen und anschließend zur Startseite zurückzukehren, um die Seitenleiste korrekt anzuzeigen.</li>
+                        <li>Beim ersten Laden der Seite bei Tablets ist es erforderlich, die Genauigkeit des Modells auszuwählen und anschließend zur Startseite zurückzukehren, 
+                            um die Seitenleiste korrekt anzuzeigen.</li>
+                        <strong>CSS-Kompatablität:</strong>
+                        <li>Diese Webseite ist für die Ansicht auf Desktop-Geräten und den meisten Tablet-Modellen optimiert.</li>
+                        <li>Die Unterstützung für Mobiltelefone ist nicht gewährleistet und kann zu Darstellungsproblemen führen.</li>
                     </ul>                      
                 </div>
             </div>       
