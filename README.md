@@ -1,0 +1,1 @@
+As part of my seminar project, I initiated a machine learning project aimed at tackling current challenges of the 21st century. My contribution centers on training models to predict wildfire occurrences based on factors like weather conditions and land characteristics. To support this, I compiled a dataset of 2,500 records, using German wildfire statistics from the past 12 years.
