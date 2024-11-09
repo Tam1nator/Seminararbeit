@@ -26,7 +26,7 @@ import math
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Papa123!@localhost:3306/datenbank'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:PASSWORD@localhost:3306/datenbank'
 db.init_app(app)
 
 
