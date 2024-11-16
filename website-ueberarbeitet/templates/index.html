@@ -250,7 +250,7 @@
                 </div>
             </div>
             <!-- Hauptformular zum Vorhersagen -->
-            <div id="main-content">
+            <!--<div id="main-content">
                 <h2>Wählen Sie ein Modell und geben Sie die Parameter ein</h2>
                 <form action="/" method="post" id="predictionForm">
                     <div class="legend">
@@ -259,12 +259,12 @@
                             {% for model_name, _ in available_models.items() %}
                             <option value="{{ model_name }}" data-columns="{{ ','.join(supported_columns[model_name]) }}"{% if model_name == default_model_name %}selected{% endif %}>{{ model_name }}</option>
                             {% endfor %}
-                        </select>
+                        </select>-->
                         <!-- Button, um die Legende anzuzeigen -->
-                        <button type="button" id="legendBtn">Legende</button>
+                        <!--<button type="button" id="legendBtn">Legende</button>
                         <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}> <span>Intervall anzeigen</span>
-                    </div>
-                <!--<div id="main-content">
+                    </div>-->
+                <div id="main-content">
                     <h2>Wählen Sie ein Modell und geben Sie die Parameter ein</h2>
                     <form action="/" method="post" id="predictionForm">
                         <div class="legend">
@@ -277,12 +277,12 @@
                                     {{ model_name }}
                                 </option>
                                 {% endfor %}
-                            </select>-->
+                            </select>
                             <!-- Button, um die Legende anzuzeigen -->
-                            <!--<button type="button" id="legendBtn">Legende</button>
+                            <button type="button" id="legendBtn">Legende</button>
                             <input type="checkbox" name="my_checkbox" value="checked" {% if checkbox_value %} checked {% endif %}>
                             <span>Intervall anzeigen</span>
-                        </div>-->
+                        </div>
                     
 
                     
