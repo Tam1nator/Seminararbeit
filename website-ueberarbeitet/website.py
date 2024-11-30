@@ -6,13 +6,13 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error
-from tensorflow import keras
-import xgboost as xgb
+#from tensorflow import keras
+#import xgboost as xgb
 import joblib
 from sklearn.model_selection import train_test_split
 import numpy as np
-from keras.layers import Layer
-import tensorflow as tf
+#from keras.layers import Layer
+#import tensorflow as tf
 from sklearn.utils import resample
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
@@ -26,7 +26,7 @@ import math
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:PASSWORD@localhost:3306/datenbank'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Password@localhost:3306/datenbank'
 db.init_app(app)
 
 
@@ -94,9 +94,9 @@ def logout():
     "linear_regression-JDAMTHW": pretrained_linear_regression,
     "decision_tree-JDAMTHW": pretrained_decision_tree,
     "random_forest-JDAMTHW" : pretrained_random_forest,
-    "neural_network-JDAMTHW" : pretrained_neural_network,
+    "neural_network-JDAMTHW" : None, #pretrained_neural_network
     "svr_model-JDAMTHW" : pretrained_svr_model,
-    "xgboost-JDAMTHW" : xgb_model
+    "xgboost-JDAMTHW" : None #xgb_model
     }
     neural_network_dropout = {}
     default_model_name = 'linear_regression-JDAMTHW'
@@ -105,7 +105,7 @@ def logout():
 # Dictionary zum Speichern der trainierten Modelle
 models = {}
 
-class MonteCarloDropout(Layer):
+'''class MonteCarloDropout(Layer):
     def __init__(self, rate, **kwargs):
         super(MonteCarloDropout, self).__init__(**kwargs)
         self.rate = rate
@@ -114,13 +114,13 @@ class MonteCarloDropout(Layer):
         return tf.nn.dropout(inputs, rate=self.rate)
 
     def compute_output_shape(self, input_shape):
-        return input_shape
+        return input_shape'''
 
 pretrained_linear_regression = joblib.load('website-ueberarbeitet\\trainierte_modelle\\linear_regression_model.pkl')
 pretrained_decision_tree = joblib.load('website-ueberarbeitet\\trainierte_modelle\\decision_tree_model.pkl')
 pretrained_random_forest = joblib.load('website-ueberarbeitet\\trainierte_modelle\\random_forest_model.pkl')
-pretrained_neural_network = keras.models.load_model('website-ueberarbeitet\\trainierte_modelle\\neural_network.h5')  
-pretrained_neural_network_dropout = keras.models.load_model('website-ueberarbeitet\\trainierte_modelle\\neural_network_dropout.h5', custom_objects={'MonteCarloDropout': MonteCarloDropout})  
+#pretrained_neural_network = keras.models.load_model('website-ueberarbeitet\\trainierte_modelle\\neural_network.h5')  
+#pretrained_neural_network_dropout = keras.models.load_model('website-ueberarbeitet\\trainierte_modelle\\neural_network_dropout.h5', custom_objects={'MonteCarloDropout': MonteCarloDropout})  
 pretrained_svr_model = joblib.load('website-ueberarbeitet\\trainierte_modelle\\svr_model.pkl')
 
 # Scaler laden
@@ -135,15 +135,15 @@ model_scalers = {
     'xgboost-JDAMTHW': scaler
 }
 
-xgb_model = xgb.Booster(model_file='website-ueberarbeitet\\trainierte_modelle\\xgboost_model.json')
+#xgb_model = xgb.Booster(model_file='website-ueberarbeitet\\trainierte_modelle\\xgboost_model.json')
 
 available_models = {
     "linear_regression-JDAMTHW": pretrained_linear_regression,
     "decision_tree-JDAMTHW": pretrained_decision_tree,
     "random_forest-JDAMTHW" : pretrained_random_forest,
-    "neural_network-JDAMTHW" : pretrained_neural_network,
+    "neural_network-JDAMTHW" : None , #pretrained_neural_network
     "svr_model-JDAMTHW" : pretrained_svr_model,
-    "xgboost-JDAMTHW" : xgb_model
+    "xgboost-JDAMTHW" : None #xgb_model
 }
 
 training_data = pd.read_csv('website-ueberarbeitet\data\jahreszeit-kodiert.csv')
@@ -186,11 +186,11 @@ def mse():
     data_to_predict_scaled = scaler.transform(data_to_predict)
     
     # Berechne die Vorhersagen
-    if isinstance(model, xgb.Booster):  # check if the model is an instance of XGBoost Booster
+    '''if isinstance(model, xgb.Booster):  # check if the model is an instance of XGBoost Booster
         dmatrix_data = xgb.DMatrix(data_to_predict_scaled)  # convert the data to DMatrix format
         predictions = model.predict(dmatrix_data).tolist()  # make predictions
-    else:
-        predictions = model.predict(data_to_predict_scaled).tolist()  # for non-xgboost models
+    else:'''
+    predictions = model.predict(data_to_predict_scaled).tolist()  # for non-xgboost models
 
     
     # Überprüfe, ob die Vorhersagen eine verschachtelte Liste sind (z.B. bei einigen Scikit-Learn Modellen)
@@ -263,7 +263,7 @@ def load_scaler_from_db(user_id):
 
 trained_models_dir = "website-ueberarbeitet\\trainierte_modelle\\"
 
-def save_nn_dropout_model_to_db(user_id, model_name, nn_dropout_model):
+'''def save_nn_dropout_model_to_db(user_id, model_name, nn_dropout_model):
     if not os.path.exists(trained_models_dir):
         os.makedirs(trained_models_dir)
 
@@ -286,7 +286,7 @@ def load_nn_dropout_model(user_id):
     
     neural_network_dropout.update(loaded_nn_dropout_models)
     return loaded_nn_dropout_models
-
+'''
 @app.route('/set_defaults', methods=['POST'])
 @login_required
 def set_defaults():
@@ -309,7 +309,7 @@ def index():
     if current_user.is_authenticated:
         load_model_from_db(user_id)
         load_scaler_from_db(user_id)
-        load_nn_dropout_model(user_id)
+        #load_nn_dropout_model(user_id)
         default_model_name = current_user.default_model
         checkbox_default_value = current_user.checkbox_value
     # Testdaten einmalig laden
@@ -371,49 +371,49 @@ def index():
             if checkbox_default_value:
                 interval = (lower_bound, upper_bound)
 
-        elif model_name.startswith("xgboost"):
-            if model_name == 'xgboost-JDAMTHW':
-                dmatrix_data = xgb.DMatrix(new_data_scaled)
-                data = dmatrix_data
-            else:
-                data = new_data_scaled
-            prediction = model.predict(data)[0]
-            if checkbox_default_value:
-                interval = (predict_interval_bootstrap(model, new_data_scaled, model_name))
+            '''elif model_name.startswith("xgboost"):
+                if model_name == 'xgboost-JDAMTHW':
+                    dmatrix_data = xgb.DMatrix(new_data_scaled)
+                    data = dmatrix_data
+                else:
+                    data = new_data_scaled
+                prediction = model.predict(data)[0]
+                if checkbox_default_value:
+                    interval = (predict_interval_bootstrap(model, new_data_scaled, model_name))'''
 
-        elif model_name == "neural_network-JDAMTHW":
-            # Beispiel für neue Daten
-            new_data = data_to_predict  # Diese Daten wurden bereits oben erstellt.
-            # Daten skalieren
-            new_data_scaled = scaler.transform(new_data)
-            prediction = model.predict(new_data_scaled)[0][0]
+            '''elif model_name == "neural_network-JDAMTHW":
+                # Beispiel für neue Daten
+                new_data = data_to_predict  # Diese Daten wurden bereits oben erstellt.
+                # Daten skalieren
+                new_data_scaled = scaler.transform(new_data)
+                prediction = model.predict(new_data_scaled)[0][0]
 
-            if checkbox_default_value:
-                T = 100  # Anzahl der Dropout-Vorhersagen
-                predictions = np.array([pretrained_neural_network_dropout.predict(new_data_scaled) for _ in range(T)]).flatten()
-                dropout_prediction = pretrained_neural_network_dropout.predict(new_data_scaled)[0][0]
+                if checkbox_default_value:
+                    T = 100  # Anzahl der Dropout-Vorhersagen
+                    predictions = np.array([pretrained_neural_network_dropout.predict(new_data_scaled) for _ in range(T)]).flatten()
+                    dropout_prediction = pretrained_neural_network_dropout.predict(new_data_scaled)[0][0]
 
-                prediction_mean = predictions.mean()
-                prediction_std = predictions.std()
-                lower_bound = prediction_mean - 1.96 * prediction_std
-                upper_bound = prediction_mean + 1.96 * prediction_std
+                    prediction_mean = predictions.mean()
+                    prediction_std = predictions.std()
+                    lower_bound = prediction_mean - 1.96 * prediction_std
+                    upper_bound = prediction_mean + 1.96 * prediction_std
 
-                interval = (lower_bound, upper_bound)
+                    interval = (lower_bound, upper_bound)
 
-        elif model_name.startswith("neural_network"):
-    
-            prediction = model.predict(new_data_scaled)[0][0]
-            if checkbox_default_value:
-                T = 100  # Anzahl der Dropout-Vorhersagen
-                predictions = np.array([neural_network_dropout[model_name].predict(new_data_scaled) for _ in range(T)]).flatten()
-                dropout_prediction = neural_network_dropout[model_name].predict(new_data_scaled)[0][0]
+            elif model_name.startswith("neural_network"):
+        
+                prediction = model.predict(new_data_scaled)[0][0]
+                if checkbox_default_value:
+                    T = 100  # Anzahl der Dropout-Vorhersagen
+                    predictions = np.array([neural_network_dropout[model_name].predict(new_data_scaled) for _ in range(T)]).flatten()
+                    dropout_prediction = neural_network_dropout[model_name].predict(new_data_scaled)[0][0]
 
-                prediction_mean = predictions.mean()
-                prediction_std = predictions.std()
-                lower_bound = prediction_mean - 1.96 * prediction_std
-                upper_bound = prediction_mean + 1.96 * prediction_std
+                    prediction_mean = predictions.mean()
+                    prediction_std = predictions.std()
+                    lower_bound = prediction_mean - 1.96 * prediction_std
+                    upper_bound = prediction_mean + 1.96 * prediction_std
 
-                interval = (lower_bound, upper_bound)
+                    interval = (lower_bound, upper_bound)'''
 
         elif model_name == "svr_model-JDAMTHW":
             # Beispiel für neue Daten
@@ -534,11 +534,11 @@ def predict_interval_bootstrap(model, new_data_scaled, model_name, n_iterations=
         # Stichprobe mit Ersatz aus den Trainingsdaten ziehen
         X_sample, y_sample = resample(X_train_scaled, y_train)
         # Modell mit der Stichprobe trainieren
-        if model_name.startswith("xgboost"):
+        '''if model_name.startswith("xgboost"):
             model_clone = xgb.XGBRegressor().fit(X_sample, y_sample)
-        else:
-            model_clone = model
-            model_clone.fit(X_sample, y_sample)
+        else:'''''
+        model_clone = model
+        model_clone.fit(X_sample, y_sample)
         # Vorhersage für `new_data` machen
         bootstrap_prediction = model_clone.predict(new_data_scaled)[0]
         bootstrap_predictions.append(bootstrap_prediction)
@@ -660,26 +660,26 @@ def train_model():
         model = DecisionTreeRegressor().fit(X_train_scaled, y_train)
     elif model_name == "random_forest":
         model = RandomForestRegressor().fit(X_train_scaled, y_train)
-    elif model_name == "xgboost":
-        model = xgb.XGBRegressor().fit(X_train_scaled, y_train)
-    elif model_name == "neural_network":
-        model = keras.Sequential([
-            keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
-            keras.layers.Dense(32, activation='relu'),
-            keras.layers.Dense(1)
-        ])
-        model.compile(optimizer='adam', loss='mse')
-        model.fit(X_train_scaled, y_train, epochs=50)
+        '''elif model_name == "xgboost":
+            model = xgb.XGBRegressor().fit(X_train_scaled, y_train)
+        elif model_name == "neural_network":
+            model = keras.Sequential([
+                keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+                keras.layers.Dense(32, activation='relu'),
+                keras.layers.Dense(1)
+            ])
+            model.compile(optimizer='adam', loss='mse')
+            model.fit(X_train_scaled, y_train, epochs=50)
 
-        neural_network_dropout_model = keras.Sequential([
-            keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
-            MonteCarloDropout(0.5),
-            keras.layers.Dense(32, activation='relu'),
-            MonteCarloDropout(0.5),
-            keras.layers.Dense(1)
-        ])
-        neural_network_dropout_model.compile(optimizer='adam', loss='mse')
-        neural_network_dropout_model.fit(X_train_scaled, y_train, epochs=50)
+            neural_network_dropout_model = keras.Sequential([
+                keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+                MonteCarloDropout(0.5),
+                keras.layers.Dense(32, activation='relu'),
+                MonteCarloDropout(0.5),
+                keras.layers.Dense(1)
+            ])
+            neural_network_dropout_model.compile(optimizer='adam', loss='mse')
+            neural_network_dropout_model.fit(X_train_scaled, y_train, epochs=50)'''
     elif model_name == "svr":
         model = SVR().fit(X_train_scaled, y_train)
     else:
@@ -694,9 +694,9 @@ def train_model():
         user.default_model = model_display_name
         db.session.commit()
 
-    if model_name == "neural_network":
+    '''if model_name == "neural_network":
         neural_network_dropout[model_display_name] = neural_network_dropout_model
-        save_nn_dropout_model_to_db(user_id, model_display_name, neural_network_dropout_model)
+        save_nn_dropout_model_to_db(user_id, model_display_name, neural_network_dropout_model)'''
 
     available_models[model_display_name] = model
     save_model_to_db(user_id, model_display_name, model)
